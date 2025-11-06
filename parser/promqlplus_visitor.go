@@ -25,33 +25,18 @@ type PromQLPlusVisitor interface {
 	// Visit a parse tree produced by PromQLPlusParser#pipeline.
 	VisitPipeline(ctx *PipelineContext) interface{}
 
+	// Visit a parse tree produced by PromQLPlusParser#pipelineStep.
+	VisitPipelineStep(ctx *PipelineStepContext) interface{}
+
 	// Visit a parse tree produced by PromQLPlusParser#selector.
 	VisitSelector(ctx *SelectorContext) interface{}
-
-	// Visit a parse tree produced by PromQLPlusParser#metricIdentifier.
-	VisitMetricIdentifier(ctx *MetricIdentifierContext) interface{}
-
-	// Visit a parse tree produced by PromQLPlusParser#labelMatchers.
-	VisitLabelMatchers(ctx *LabelMatchersContext) interface{}
 
 	// Visit a parse tree produced by PromQLPlusParser#labelMatcher.
 	VisitLabelMatcher(ctx *LabelMatcherContext) interface{}
 
-	// Visit a parse tree produced by PromQLPlusParser#matchOp.
-	VisitMatchOp(ctx *MatchOpContext) interface{}
-
 	// Visit a parse tree produced by PromQLPlusParser#aggregation.
 	VisitAggregation(ctx *AggregationContext) interface{}
 
-	// Visit a parse tree produced by PromQLPlusParser#labelList.
-	VisitLabelList(ctx *LabelListContext) interface{}
-
-	// Visit a parse tree produced by PromQLPlusParser#aggregationOp.
-	VisitAggregationOp(ctx *AggregationOpContext) interface{}
-
 	// Visit a parse tree produced by PromQLPlusParser#aligner.
 	VisitAligner(ctx *AlignerContext) interface{}
-
-	// Visit a parse tree produced by PromQLPlusParser#duration.
-	VisitDuration(ctx *DurationContext) interface{}
 }

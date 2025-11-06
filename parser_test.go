@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/fpetkovski/let-ql/parser"
 	"github.com/antlr4-go/antlr/v4"
+	"github.com/fpetkovski/let-ql/parser"
 	"github.com/stretchr/testify/require"
 )
 
@@ -14,10 +14,23 @@ func TestParser(t *testing.T) {
 		name      string
 		query     string
 		expectErr bool
+
+		promql string
 	}{
 		{
-			name:  "selector",
-			query: `http_requests_total`,
+			name:   "selector with metric",
+			query:  `http_requests_total`,
+			promql: `http_requests_total`,
+		},
+		{
+			name:   "selector with and empty matchers",
+			query:  `http_requests_total{}`,
+			promql: `http_requests_total`,
+		},
+		{
+			name:   "selector without metric",
+			query:  `{job="prometheus"}`,
+			promql: `{job="prometheus"}`,
 		},
 		{
 			name:      "selector",
@@ -25,20 +38,24 @@ func TestParser(t *testing.T) {
 			expectErr: true,
 		},
 		{
-			name:  "selector with matchers",
-			query: `http_requests_total{method="POST"}`,
+			name:   "selector with matchers",
+			query:  `http_requests_total{method="POST"}`,
+			promql: `http_requests_total{method="POST"}`,
 		},
 		{
-			name:  "single-label aggregation",
-			query: `http_requests_total{method="POST"} | sum by (method)`,
+			name:   "single-label aggregation",
+			query:  `http_requests_total{method="POST"} | sum by (method)`,
+			promql: `sum by (method) (http_requests_total{method="POST"})`,
 		},
 		{
-			name:  "multi-label aggregation",
-			query: `http_requests_total{method="POST"} | sum by (endpoint, method)`,
+			name:   "multi-label aggregation",
+			query:  `http_requests_total{method="POST"} | sum by (endpoint, method)`,
+			promql: `sum by (endpoint, method) (http_requests_total{method="POST"})`,
 		},
 		{
-			name:  "combination of aggregation and aligner",
-			query: `http_requests_total | sum by (endpoint) | rate 5m | sum by ()`,
+			name:   "combination of aggregation and aligner",
+			query:  `http_requests_total | rate 5m | sum by (endpoint) | sum by ()`,
+			promql: `sum(sum by (endpoint) (rate(http_requests_total[5m])))`,
 		},
 		{
 			name: "let expression",
@@ -58,10 +75,10 @@ in req_get / req_total`,
 				require.NotEmpty(t, errs)
 			} else {
 				require.Empty(t, errs)
-				antlr.NewParseTreeWalker().Walk(&antlr.BaseParseTreeListener{}, ast)
+				v := PromQLTranspiler{}
+				pql := v.Visit(ast)
+				require.Equal(t, tc.promql, pql)
 			}
-			v := parser.BasePromQLPlusVisitor{}
-			v.Visit(ast)
 		})
 	}
 }
@@ -89,16 +106,4 @@ func parseQuery(query string) (parser.IQueryContext, []string) {
 	p.AddErrorListener(errorListener)
 
 	return p.Query(), errorListener.errors
-}
-
-// printTree recursively prints the parse tree
-func printTree(tree antlr.Tree, parser antlr.Parser, indent string) {
-	switch t := tree.(type) {
-	case antlr.TerminalNode:
-		fmt.Printf("%s%s ", indent, t.GetText())
-	case antlr.RuleNode:
-		for i := 0; i < t.GetChildCount(); i++ {
-			printTree(t.GetChild(i), parser, indent)
-		}
-	}
 }

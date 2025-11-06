@@ -38,6 +38,19 @@ gen: $(ANTLR_JAR)
 	fi
 	@echo "Parser generation complete!"
 
+# Generate JavaScript parser
+.PHONY: gen-js
+gen-js: $(ANTLR_JAR)
+	@echo "Generating JavaScript parser from grammar..."
+	@mkdir -p web/parser
+	@java -jar $(ANTLR_JAR) -Dlanguage=JavaScript -o web/parser -visitor $(GRAMMAR)
+	@echo "Moving generated files to correct location..."
+	@if [ -d "web/parser/grammar" ]; then \
+		mv web/parser/grammar/* web/parser/; \
+		rmdir web/parser/grammar; \
+	fi
+	@echo "JavaScript parser generation complete!"
+
 # Clean generated files
 .PHONY: clean
 clean:

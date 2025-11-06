@@ -19,7 +19,7 @@ letBindings
 
 // Single let binding
 letBinding
-    : IDENTIFIER '=' pipeline
+    : IDENTIFIER MATCH_EQ pipeline
     ;
 
 expression
@@ -27,41 +27,35 @@ expression
     ;
 
 pipeline
-    : selector ('|' (aggregation|aligner))*
+    : selector ('|' pipelineStep)*
+    ;
+
+pipelineStep
+    : aggregation|aligner
     ;
 
 selector
-    : metricIdentifier labelMatchers?
-    ;
-
-metricIdentifier
-    : IDENTIFIER
-    ;
-
-labelMatchers
-    : '{' labelMatcher (',' labelMatcher)* ','? '}'
+    : IDENTIFIER? ('{' (labelMatcher (',' labelMatcher)*)? '}')?
     ;
 
 labelMatcher
-    : IDENTIFIER matchOp STRING
+    : IDENTIFIER (MATCH_EQ | MATCH_NEQ | MATCH_RE | MATCH_NRE) STRING
     ;
 
-matchOp
-    : '='
-    | '!='
-    | '=~'
-    | '!~'
-    ;
+// Match operators
+MATCH_EQ  : '=';
+MATCH_NEQ : '!=';
+MATCH_RE  : '=~';
+MATCH_NRE : '!~';
 
 aggregation
-    : aggregationOp (BY|WITHOUT) ('(' labelList? ')')?
+    : AGGREGATION_OP (BY|WITHOUT) ('(' (IDENTIFIER (',' IDENTIFIER)*)? ')')?
     ;
 
-labelList
-    : IDENTIFIER (',' IDENTIFIER)*
-    ;
+BY         : 'by';
+WITHOUT    : 'without';
 
-aggregationOp
+AGGREGATION_OP
     : 'sum'
     | 'min'
     | 'max'
@@ -76,10 +70,10 @@ aggregationOp
     ;
 
 aligner
-    : IDENTIFIER duration
+    : IDENTIFIER DURATION
     ;
 
-duration
+DURATION
     : NUMBER DURATION_UNIT
     ;
 
@@ -88,8 +82,6 @@ duration
 // Keywords
 LET        : 'let';
 IN         : 'in';
-BY         : 'by';
-WITHOUT    : 'without';
 
 // Boolean operators
 AND        : 'and';

@@ -56,23 +56,17 @@ func (s *BasePromQLPlusListener) EnterPipeline(ctx *PipelineContext) {}
 // ExitPipeline is called when production pipeline is exited.
 func (s *BasePromQLPlusListener) ExitPipeline(ctx *PipelineContext) {}
 
+// EnterPipelineStep is called when production pipelineStep is entered.
+func (s *BasePromQLPlusListener) EnterPipelineStep(ctx *PipelineStepContext) {}
+
+// ExitPipelineStep is called when production pipelineStep is exited.
+func (s *BasePromQLPlusListener) ExitPipelineStep(ctx *PipelineStepContext) {}
+
 // EnterSelector is called when production selector is entered.
 func (s *BasePromQLPlusListener) EnterSelector(ctx *SelectorContext) {}
 
 // ExitSelector is called when production selector is exited.
 func (s *BasePromQLPlusListener) ExitSelector(ctx *SelectorContext) {}
-
-// EnterMetricIdentifier is called when production metricIdentifier is entered.
-func (s *BasePromQLPlusListener) EnterMetricIdentifier(ctx *MetricIdentifierContext) {}
-
-// ExitMetricIdentifier is called when production metricIdentifier is exited.
-func (s *BasePromQLPlusListener) ExitMetricIdentifier(ctx *MetricIdentifierContext) {}
-
-// EnterLabelMatchers is called when production labelMatchers is entered.
-func (s *BasePromQLPlusListener) EnterLabelMatchers(ctx *LabelMatchersContext) {}
-
-// ExitLabelMatchers is called when production labelMatchers is exited.
-func (s *BasePromQLPlusListener) ExitLabelMatchers(ctx *LabelMatchersContext) {}
 
 // EnterLabelMatcher is called when production labelMatcher is entered.
 func (s *BasePromQLPlusListener) EnterLabelMatcher(ctx *LabelMatcherContext) {}
@@ -80,38 +74,14 @@ func (s *BasePromQLPlusListener) EnterLabelMatcher(ctx *LabelMatcherContext) {}
 // ExitLabelMatcher is called when production labelMatcher is exited.
 func (s *BasePromQLPlusListener) ExitLabelMatcher(ctx *LabelMatcherContext) {}
 
-// EnterMatchOp is called when production matchOp is entered.
-func (s *BasePromQLPlusListener) EnterMatchOp(ctx *MatchOpContext) {}
-
-// ExitMatchOp is called when production matchOp is exited.
-func (s *BasePromQLPlusListener) ExitMatchOp(ctx *MatchOpContext) {}
-
 // EnterAggregation is called when production aggregation is entered.
 func (s *BasePromQLPlusListener) EnterAggregation(ctx *AggregationContext) {}
 
 // ExitAggregation is called when production aggregation is exited.
 func (s *BasePromQLPlusListener) ExitAggregation(ctx *AggregationContext) {}
 
-// EnterLabelList is called when production labelList is entered.
-func (s *BasePromQLPlusListener) EnterLabelList(ctx *LabelListContext) {}
-
-// ExitLabelList is called when production labelList is exited.
-func (s *BasePromQLPlusListener) ExitLabelList(ctx *LabelListContext) {}
-
-// EnterAggregationOp is called when production aggregationOp is entered.
-func (s *BasePromQLPlusListener) EnterAggregationOp(ctx *AggregationOpContext) {}
-
-// ExitAggregationOp is called when production aggregationOp is exited.
-func (s *BasePromQLPlusListener) ExitAggregationOp(ctx *AggregationOpContext) {}
-
 // EnterAligner is called when production aligner is entered.
 func (s *BasePromQLPlusListener) EnterAligner(ctx *AlignerContext) {}
 
 // ExitAligner is called when production aligner is exited.
 func (s *BasePromQLPlusListener) ExitAligner(ctx *AlignerContext) {}
-
-// EnterDuration is called when production duration is entered.
-func (s *BasePromQLPlusListener) EnterDuration(ctx *DurationContext) {}
-
-// ExitDuration is called when production duration is exited.
-func (s *BasePromQLPlusListener) ExitDuration(ctx *DurationContext) {}

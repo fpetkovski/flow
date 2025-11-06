@@ -32,73 +32,64 @@ var PromQLPlusParserStaticData struct {
 func promqlplusParserInit() {
 	staticData := &PromQLPlusParserStaticData
 	staticData.LiteralNames = []string{
-		"", "','", "'='", "'/'", "'+'", "'-'", "'*'", "'%'", "'|'", "'{'", "'}'",
-		"'!='", "'=~'", "'!~'", "'('", "')'", "'sum'", "'min'", "'max'", "'avg'",
-		"'stddev'", "'stdvar'", "'count'", "'count_values'", "'bottomk'", "'topk'",
-		"'quantile'", "'let'", "'in'", "'by'", "'without'", "'and'", "'or'",
-		"'unless'",
+		"", "','", "'/'", "'+'", "'-'", "'*'", "'%'", "'|'", "'{'", "'}'", "'('",
+		"')'", "'='", "'!='", "'=~'", "'!~'", "'by'", "'without'", "", "", "'let'",
+		"'in'", "'and'", "'or'", "'unless'",
 	}
 	staticData.SymbolicNames = []string{
-		"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "", "", "", "LET", "IN", "BY", "WITHOUT",
-		"AND", "OR", "UNLESS", "NUMBER", "DURATION_UNIT", "IDENTIFIER", "STRING",
-		"COMMENT", "MULTILINE_COMMENT", "WS",
+		"", "", "", "", "", "", "", "", "", "", "", "", "MATCH_EQ", "MATCH_NEQ",
+		"MATCH_RE", "MATCH_NRE", "BY", "WITHOUT", "AGGREGATION_OP", "DURATION",
+		"LET", "IN", "AND", "OR", "UNLESS", "NUMBER", "DURATION_UNIT", "IDENTIFIER",
+		"STRING", "COMMENT", "MULTILINE_COMMENT", "WS",
 	}
 	staticData.RuleNames = []string{
 		"query", "letExpression", "letBindings", "letBinding", "expression",
-		"pipeline", "selector", "metricIdentifier", "labelMatchers", "labelMatcher",
-		"matchOp", "aggregation", "labelList", "aggregationOp", "aligner", "duration",
+		"pipeline", "pipelineStep", "selector", "labelMatcher", "aggregation",
+		"aligner",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 40, 124, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 31, 104, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
-		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
-		1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 3, 0, 39, 8, 0, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 2, 1, 2, 1, 2, 5, 2, 49, 8, 2, 10, 2, 12, 2, 52, 9, 2, 1, 3,
-		1, 3, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 1, 5, 3, 5,
-		66, 8, 5, 5, 5, 68, 8, 5, 10, 5, 12, 5, 71, 9, 5, 1, 6, 1, 6, 3, 6, 75,
-		8, 6, 1, 7, 1, 7, 1, 8, 1, 8, 1, 8, 1, 8, 5, 8, 83, 8, 8, 10, 8, 12, 8,
-		86, 9, 8, 1, 8, 3, 8, 89, 8, 8, 1, 8, 1, 8, 1, 9, 1, 9, 1, 9, 1, 9, 1,
-		10, 1, 10, 1, 11, 1, 11, 1, 11, 1, 11, 3, 11, 103, 8, 11, 1, 11, 3, 11,
-		106, 8, 11, 1, 12, 1, 12, 1, 12, 5, 12, 111, 8, 12, 10, 12, 12, 12, 114,
-		9, 12, 1, 13, 1, 13, 1, 14, 1, 14, 1, 14, 1, 15, 1, 15, 1, 15, 1, 15, 0,
-		0, 16, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 0, 4,
-		1, 0, 3, 7, 2, 0, 2, 2, 11, 13, 1, 0, 29, 30, 1, 0, 16, 26, 117, 0, 38,
-		1, 0, 0, 0, 2, 40, 1, 0, 0, 0, 4, 45, 1, 0, 0, 0, 6, 53, 1, 0, 0, 0, 8,
-		57, 1, 0, 0, 0, 10, 61, 1, 0, 0, 0, 12, 72, 1, 0, 0, 0, 14, 76, 1, 0, 0,
-		0, 16, 78, 1, 0, 0, 0, 18, 92, 1, 0, 0, 0, 20, 96, 1, 0, 0, 0, 22, 98,
-		1, 0, 0, 0, 24, 107, 1, 0, 0, 0, 26, 115, 1, 0, 0, 0, 28, 117, 1, 0, 0,
-		0, 30, 120, 1, 0, 0, 0, 32, 33, 3, 2, 1, 0, 33, 34, 5, 0, 0, 1, 34, 39,
-		1, 0, 0, 0, 35, 36, 3, 10, 5, 0, 36, 37, 5, 0, 0, 1, 37, 39, 1, 0, 0, 0,
-		38, 32, 1, 0, 0, 0, 38, 35, 1, 0, 0, 0, 39, 1, 1, 0, 0, 0, 40, 41, 5, 27,
-		0, 0, 41, 42, 3, 4, 2, 0, 42, 43, 5, 28, 0, 0, 43, 44, 3, 8, 4, 0, 44,
-		3, 1, 0, 0, 0, 45, 50, 3, 6, 3, 0, 46, 47, 5, 1, 0, 0, 47, 49, 3, 6, 3,
-		0, 48, 46, 1, 0, 0, 0, 49, 52, 1, 0, 0, 0, 50, 48, 1, 0, 0, 0, 50, 51,
-		1, 0, 0, 0, 51, 5, 1, 0, 0, 0, 52, 50, 1, 0, 0, 0, 53, 54, 5, 36, 0, 0,
-		54, 55, 5, 2, 0, 0, 55, 56, 3, 10, 5, 0, 56, 7, 1, 0, 0, 0, 57, 58, 5,
-		36, 0, 0, 58, 59, 7, 0, 0, 0, 59, 60, 5, 36, 0, 0, 60, 9, 1, 0, 0, 0, 61,
-		69, 3, 12, 6, 0, 62, 65, 5, 8, 0, 0, 63, 66, 3, 22, 11, 0, 64, 66, 3, 28,
-		14, 0, 65, 63, 1, 0, 0, 0, 65, 64, 1, 0, 0, 0, 66, 68, 1, 0, 0, 0, 67,
-		62, 1, 0, 0, 0, 68, 71, 1, 0, 0, 0, 69, 67, 1, 0, 0, 0, 69, 70, 1, 0, 0,
-		0, 70, 11, 1, 0, 0, 0, 71, 69, 1, 0, 0, 0, 72, 74, 3, 14, 7, 0, 73, 75,
-		3, 16, 8, 0, 74, 73, 1, 0, 0, 0, 74, 75, 1, 0, 0, 0, 75, 13, 1, 0, 0, 0,
-		76, 77, 5, 36, 0, 0, 77, 15, 1, 0, 0, 0, 78, 79, 5, 9, 0, 0, 79, 84, 3,
-		18, 9, 0, 80, 81, 5, 1, 0, 0, 81, 83, 3, 18, 9, 0, 82, 80, 1, 0, 0, 0,
-		83, 86, 1, 0, 0, 0, 84, 82, 1, 0, 0, 0, 84, 85, 1, 0, 0, 0, 85, 88, 1,
-		0, 0, 0, 86, 84, 1, 0, 0, 0, 87, 89, 5, 1, 0, 0, 88, 87, 1, 0, 0, 0, 88,
-		89, 1, 0, 0, 0, 89, 90, 1, 0, 0, 0, 90, 91, 5, 10, 0, 0, 91, 17, 1, 0,
-		0, 0, 92, 93, 5, 36, 0, 0, 93, 94, 3, 20, 10, 0, 94, 95, 5, 37, 0, 0, 95,
-		19, 1, 0, 0, 0, 96, 97, 7, 1, 0, 0, 97, 21, 1, 0, 0, 0, 98, 99, 3, 26,
-		13, 0, 99, 105, 7, 2, 0, 0, 100, 102, 5, 14, 0, 0, 101, 103, 3, 24, 12,
-		0, 102, 101, 1, 0, 0, 0, 102, 103, 1, 0, 0, 0, 103, 104, 1, 0, 0, 0, 104,
-		106, 5, 15, 0, 0, 105, 100, 1, 0, 0, 0, 105, 106, 1, 0, 0, 0, 106, 23,
-		1, 0, 0, 0, 107, 112, 5, 36, 0, 0, 108, 109, 5, 1, 0, 0, 109, 111, 5, 36,
-		0, 0, 110, 108, 1, 0, 0, 0, 111, 114, 1, 0, 0, 0, 112, 110, 1, 0, 0, 0,
-		112, 113, 1, 0, 0, 0, 113, 25, 1, 0, 0, 0, 114, 112, 1, 0, 0, 0, 115, 116,
-		7, 3, 0, 0, 116, 27, 1, 0, 0, 0, 117, 118, 5, 36, 0, 0, 118, 119, 3, 30,
-		15, 0, 119, 29, 1, 0, 0, 0, 120, 121, 5, 34, 0, 0, 121, 122, 5, 35, 0,
-		0, 122, 31, 1, 0, 0, 0, 10, 38, 50, 65, 69, 74, 84, 88, 102, 105, 112,
+		10, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 3, 0, 29, 8, 0, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 5, 2, 39, 8, 2, 10, 2, 12, 2, 42, 9, 2,
+		1, 3, 1, 3, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 5, 5,
+		55, 8, 5, 10, 5, 12, 5, 58, 9, 5, 1, 6, 1, 6, 3, 6, 62, 8, 6, 1, 7, 3,
+		7, 65, 8, 7, 1, 7, 1, 7, 1, 7, 1, 7, 5, 7, 71, 8, 7, 10, 7, 12, 7, 74,
+		9, 7, 3, 7, 76, 8, 7, 1, 7, 3, 7, 79, 8, 7, 1, 8, 1, 8, 1, 8, 1, 8, 1,
+		9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 5, 9, 91, 8, 9, 10, 9, 12, 9, 94, 9, 9,
+		3, 9, 96, 8, 9, 1, 9, 3, 9, 99, 8, 9, 1, 10, 1, 10, 1, 10, 1, 10, 0, 0,
+		11, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 0, 3, 1, 0, 2, 6, 1, 0, 12,
+		15, 1, 0, 16, 17, 103, 0, 28, 1, 0, 0, 0, 2, 30, 1, 0, 0, 0, 4, 35, 1,
+		0, 0, 0, 6, 43, 1, 0, 0, 0, 8, 47, 1, 0, 0, 0, 10, 51, 1, 0, 0, 0, 12,
+		61, 1, 0, 0, 0, 14, 64, 1, 0, 0, 0, 16, 80, 1, 0, 0, 0, 18, 84, 1, 0, 0,
+		0, 20, 100, 1, 0, 0, 0, 22, 23, 3, 2, 1, 0, 23, 24, 5, 0, 0, 1, 24, 29,
+		1, 0, 0, 0, 25, 26, 3, 10, 5, 0, 26, 27, 5, 0, 0, 1, 27, 29, 1, 0, 0, 0,
+		28, 22, 1, 0, 0, 0, 28, 25, 1, 0, 0, 0, 29, 1, 1, 0, 0, 0, 30, 31, 5, 20,
+		0, 0, 31, 32, 3, 4, 2, 0, 32, 33, 5, 21, 0, 0, 33, 34, 3, 8, 4, 0, 34,
+		3, 1, 0, 0, 0, 35, 40, 3, 6, 3, 0, 36, 37, 5, 1, 0, 0, 37, 39, 3, 6, 3,
+		0, 38, 36, 1, 0, 0, 0, 39, 42, 1, 0, 0, 0, 40, 38, 1, 0, 0, 0, 40, 41,
+		1, 0, 0, 0, 41, 5, 1, 0, 0, 0, 42, 40, 1, 0, 0, 0, 43, 44, 5, 27, 0, 0,
+		44, 45, 5, 12, 0, 0, 45, 46, 3, 10, 5, 0, 46, 7, 1, 0, 0, 0, 47, 48, 5,
+		27, 0, 0, 48, 49, 7, 0, 0, 0, 49, 50, 5, 27, 0, 0, 50, 9, 1, 0, 0, 0, 51,
+		56, 3, 14, 7, 0, 52, 53, 5, 7, 0, 0, 53, 55, 3, 12, 6, 0, 54, 52, 1, 0,
+		0, 0, 55, 58, 1, 0, 0, 0, 56, 54, 1, 0, 0, 0, 56, 57, 1, 0, 0, 0, 57, 11,
+		1, 0, 0, 0, 58, 56, 1, 0, 0, 0, 59, 62, 3, 18, 9, 0, 60, 62, 3, 20, 10,
+		0, 61, 59, 1, 0, 0, 0, 61, 60, 1, 0, 0, 0, 62, 13, 1, 0, 0, 0, 63, 65,
+		5, 27, 0, 0, 64, 63, 1, 0, 0, 0, 64, 65, 1, 0, 0, 0, 65, 78, 1, 0, 0, 0,
+		66, 75, 5, 8, 0, 0, 67, 72, 3, 16, 8, 0, 68, 69, 5, 1, 0, 0, 69, 71, 3,
+		16, 8, 0, 70, 68, 1, 0, 0, 0, 71, 74, 1, 0, 0, 0, 72, 70, 1, 0, 0, 0, 72,
+		73, 1, 0, 0, 0, 73, 76, 1, 0, 0, 0, 74, 72, 1, 0, 0, 0, 75, 67, 1, 0, 0,
+		0, 75, 76, 1, 0, 0, 0, 76, 77, 1, 0, 0, 0, 77, 79, 5, 9, 0, 0, 78, 66,
+		1, 0, 0, 0, 78, 79, 1, 0, 0, 0, 79, 15, 1, 0, 0, 0, 80, 81, 5, 27, 0, 0,
+		81, 82, 7, 1, 0, 0, 82, 83, 5, 28, 0, 0, 83, 17, 1, 0, 0, 0, 84, 85, 5,
+		18, 0, 0, 85, 98, 7, 2, 0, 0, 86, 95, 5, 10, 0, 0, 87, 92, 5, 27, 0, 0,
+		88, 89, 5, 1, 0, 0, 89, 91, 5, 27, 0, 0, 90, 88, 1, 0, 0, 0, 91, 94, 1,
+		0, 0, 0, 92, 90, 1, 0, 0, 0, 92, 93, 1, 0, 0, 0, 93, 96, 1, 0, 0, 0, 94,
+		92, 1, 0, 0, 0, 95, 87, 1, 0, 0, 0, 95, 96, 1, 0, 0, 0, 96, 97, 1, 0, 0,
+		0, 97, 99, 5, 11, 0, 0, 98, 86, 1, 0, 0, 0, 98, 99, 1, 0, 0, 0, 99, 19,
+		1, 0, 0, 0, 100, 101, 5, 27, 0, 0, 101, 102, 5, 19, 0, 0, 102, 21, 1, 0,
+		0, 0, 11, 28, 40, 56, 61, 64, 72, 75, 78, 92, 95, 98,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -148,55 +139,41 @@ const (
 	PromQLPlusParserT__8              = 9
 	PromQLPlusParserT__9              = 10
 	PromQLPlusParserT__10             = 11
-	PromQLPlusParserT__11             = 12
-	PromQLPlusParserT__12             = 13
-	PromQLPlusParserT__13             = 14
-	PromQLPlusParserT__14             = 15
-	PromQLPlusParserT__15             = 16
-	PromQLPlusParserT__16             = 17
-	PromQLPlusParserT__17             = 18
-	PromQLPlusParserT__18             = 19
-	PromQLPlusParserT__19             = 20
-	PromQLPlusParserT__20             = 21
-	PromQLPlusParserT__21             = 22
-	PromQLPlusParserT__22             = 23
-	PromQLPlusParserT__23             = 24
-	PromQLPlusParserT__24             = 25
-	PromQLPlusParserT__25             = 26
-	PromQLPlusParserLET               = 27
-	PromQLPlusParserIN                = 28
-	PromQLPlusParserBY                = 29
-	PromQLPlusParserWITHOUT           = 30
-	PromQLPlusParserAND               = 31
-	PromQLPlusParserOR                = 32
-	PromQLPlusParserUNLESS            = 33
-	PromQLPlusParserNUMBER            = 34
-	PromQLPlusParserDURATION_UNIT     = 35
-	PromQLPlusParserIDENTIFIER        = 36
-	PromQLPlusParserSTRING            = 37
-	PromQLPlusParserCOMMENT           = 38
-	PromQLPlusParserMULTILINE_COMMENT = 39
-	PromQLPlusParserWS                = 40
+	PromQLPlusParserMATCH_EQ          = 12
+	PromQLPlusParserMATCH_NEQ         = 13
+	PromQLPlusParserMATCH_RE          = 14
+	PromQLPlusParserMATCH_NRE         = 15
+	PromQLPlusParserBY                = 16
+	PromQLPlusParserWITHOUT           = 17
+	PromQLPlusParserAGGREGATION_OP    = 18
+	PromQLPlusParserDURATION          = 19
+	PromQLPlusParserLET               = 20
+	PromQLPlusParserIN                = 21
+	PromQLPlusParserAND               = 22
+	PromQLPlusParserOR                = 23
+	PromQLPlusParserUNLESS            = 24
+	PromQLPlusParserNUMBER            = 25
+	PromQLPlusParserDURATION_UNIT     = 26
+	PromQLPlusParserIDENTIFIER        = 27
+	PromQLPlusParserSTRING            = 28
+	PromQLPlusParserCOMMENT           = 29
+	PromQLPlusParserMULTILINE_COMMENT = 30
+	PromQLPlusParserWS                = 31
 )
 
 // PromQLPlusParser rules.
 const (
-	PromQLPlusParserRULE_query            = 0
-	PromQLPlusParserRULE_letExpression    = 1
-	PromQLPlusParserRULE_letBindings      = 2
-	PromQLPlusParserRULE_letBinding       = 3
-	PromQLPlusParserRULE_expression       = 4
-	PromQLPlusParserRULE_pipeline         = 5
-	PromQLPlusParserRULE_selector         = 6
-	PromQLPlusParserRULE_metricIdentifier = 7
-	PromQLPlusParserRULE_labelMatchers    = 8
-	PromQLPlusParserRULE_labelMatcher     = 9
-	PromQLPlusParserRULE_matchOp          = 10
-	PromQLPlusParserRULE_aggregation      = 11
-	PromQLPlusParserRULE_labelList        = 12
-	PromQLPlusParserRULE_aggregationOp    = 13
-	PromQLPlusParserRULE_aligner          = 14
-	PromQLPlusParserRULE_duration         = 15
+	PromQLPlusParserRULE_query         = 0
+	PromQLPlusParserRULE_letExpression = 1
+	PromQLPlusParserRULE_letBindings   = 2
+	PromQLPlusParserRULE_letBinding    = 3
+	PromQLPlusParserRULE_expression    = 4
+	PromQLPlusParserRULE_pipeline      = 5
+	PromQLPlusParserRULE_pipelineStep  = 6
+	PromQLPlusParserRULE_selector      = 7
+	PromQLPlusParserRULE_labelMatcher  = 8
+	PromQLPlusParserRULE_aggregation   = 9
+	PromQLPlusParserRULE_aligner       = 10
 )
 
 // IQueryContext is an interface to support dynamic dispatch.
@@ -316,7 +293,7 @@ func (s *QueryContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 func (p *PromQLPlusParser) Query() (localctx IQueryContext) {
 	localctx = NewQueryContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 0, PromQLPlusParserRULE_query)
-	p.SetState(38)
+	p.SetState(28)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -326,11 +303,11 @@ func (p *PromQLPlusParser) Query() (localctx IQueryContext) {
 	case PromQLPlusParserLET:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(32)
+			p.SetState(22)
 			p.LetExpression()
 		}
 		{
-			p.SetState(33)
+			p.SetState(23)
 			p.Match(PromQLPlusParserEOF)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -338,14 +315,14 @@ func (p *PromQLPlusParser) Query() (localctx IQueryContext) {
 			}
 		}
 
-	case PromQLPlusParserIDENTIFIER:
+	case PromQLPlusParserEOF, PromQLPlusParserT__6, PromQLPlusParserT__7, PromQLPlusParserIDENTIFIER:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(35)
+			p.SetState(25)
 			p.Pipeline()
 		}
 		{
-			p.SetState(36)
+			p.SetState(26)
 			p.Match(PromQLPlusParserEOF)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -495,7 +472,7 @@ func (p *PromQLPlusParser) LetExpression() (localctx ILetExpressionContext) {
 	p.EnterRule(localctx, 2, PromQLPlusParserRULE_letExpression)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(40)
+		p.SetState(30)
 		p.Match(PromQLPlusParserLET)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -503,11 +480,11 @@ func (p *PromQLPlusParser) LetExpression() (localctx ILetExpressionContext) {
 		}
 	}
 	{
-		p.SetState(41)
+		p.SetState(31)
 		p.LetBindings()
 	}
 	{
-		p.SetState(42)
+		p.SetState(32)
 		p.Match(PromQLPlusParserIN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -515,7 +492,7 @@ func (p *PromQLPlusParser) LetExpression() (localctx ILetExpressionContext) {
 		}
 	}
 	{
-		p.SetState(43)
+		p.SetState(33)
 		p.Expression()
 	}
 
@@ -657,10 +634,10 @@ func (p *PromQLPlusParser) LetBindings() (localctx ILetBindingsContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(45)
+		p.SetState(35)
 		p.LetBinding()
 	}
-	p.SetState(50)
+	p.SetState(40)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -669,7 +646,7 @@ func (p *PromQLPlusParser) LetBindings() (localctx ILetBindingsContext) {
 
 	for _la == PromQLPlusParserT__0 {
 		{
-			p.SetState(46)
+			p.SetState(36)
 			p.Match(PromQLPlusParserT__0)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -677,11 +654,11 @@ func (p *PromQLPlusParser) LetBindings() (localctx ILetBindingsContext) {
 			}
 		}
 		{
-			p.SetState(47)
+			p.SetState(37)
 			p.LetBinding()
 		}
 
-		p.SetState(52)
+		p.SetState(42)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -711,6 +688,7 @@ type ILetBindingContext interface {
 
 	// Getter signatures
 	IDENTIFIER() antlr.TerminalNode
+	MATCH_EQ() antlr.TerminalNode
 	Pipeline() IPipelineContext
 
 	// IsLetBindingContext differentiates from other interfaces.
@@ -751,6 +729,10 @@ func (s *LetBindingContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *LetBindingContext) IDENTIFIER() antlr.TerminalNode {
 	return s.GetToken(PromQLPlusParserIDENTIFIER, 0)
+}
+
+func (s *LetBindingContext) MATCH_EQ() antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserMATCH_EQ, 0)
 }
 
 func (s *LetBindingContext) Pipeline() IPipelineContext {
@@ -804,7 +786,7 @@ func (p *PromQLPlusParser) LetBinding() (localctx ILetBindingContext) {
 	p.EnterRule(localctx, 6, PromQLPlusParserRULE_letBinding)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(53)
+		p.SetState(43)
 		p.Match(PromQLPlusParserIDENTIFIER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -812,15 +794,15 @@ func (p *PromQLPlusParser) LetBinding() (localctx ILetBindingContext) {
 		}
 	}
 	{
-		p.SetState(54)
-		p.Match(PromQLPlusParserT__1)
+		p.SetState(44)
+		p.Match(PromQLPlusParserMATCH_EQ)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
 	{
-		p.SetState(55)
+		p.SetState(45)
 		p.Pipeline()
 	}
 
@@ -929,7 +911,7 @@ func (p *PromQLPlusParser) Expression() (localctx IExpressionContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(57)
+		p.SetState(47)
 		p.Match(PromQLPlusParserIDENTIFIER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -937,10 +919,10 @@ func (p *PromQLPlusParser) Expression() (localctx IExpressionContext) {
 		}
 	}
 	{
-		p.SetState(58)
+		p.SetState(48)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&248) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&124) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -948,7 +930,7 @@ func (p *PromQLPlusParser) Expression() (localctx IExpressionContext) {
 		}
 	}
 	{
-		p.SetState(59)
+		p.SetState(49)
 		p.Match(PromQLPlusParserIDENTIFIER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -978,10 +960,8 @@ type IPipelineContext interface {
 
 	// Getter signatures
 	Selector() ISelectorContext
-	AllAggregation() []IAggregationContext
-	Aggregation(i int) IAggregationContext
-	AllAligner() []IAlignerContext
-	Aligner(i int) IAlignerContext
+	AllPipelineStep() []IPipelineStepContext
+	PipelineStep(i int) IPipelineStepContext
 
 	// IsPipelineContext differentiates from other interfaces.
 	IsPipelineContext()
@@ -1035,20 +1015,20 @@ func (s *PipelineContext) Selector() ISelectorContext {
 	return t.(ISelectorContext)
 }
 
-func (s *PipelineContext) AllAggregation() []IAggregationContext {
+func (s *PipelineContext) AllPipelineStep() []IPipelineStepContext {
 	children := s.GetChildren()
 	len := 0
 	for _, ctx := range children {
-		if _, ok := ctx.(IAggregationContext); ok {
+		if _, ok := ctx.(IPipelineStepContext); ok {
 			len++
 		}
 	}
 
-	tst := make([]IAggregationContext, len)
+	tst := make([]IPipelineStepContext, len)
 	i := 0
 	for _, ctx := range children {
-		if t, ok := ctx.(IAggregationContext); ok {
-			tst[i] = t.(IAggregationContext)
+		if t, ok := ctx.(IPipelineStepContext); ok {
+			tst[i] = t.(IPipelineStepContext)
 			i++
 		}
 	}
@@ -1056,11 +1036,11 @@ func (s *PipelineContext) AllAggregation() []IAggregationContext {
 	return tst
 }
 
-func (s *PipelineContext) Aggregation(i int) IAggregationContext {
+func (s *PipelineContext) PipelineStep(i int) IPipelineStepContext {
 	var t antlr.RuleContext
 	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IAggregationContext); ok {
+		if _, ok := ctx.(IPipelineStepContext); ok {
 			if j == i {
 				t = ctx.(antlr.RuleContext)
 				break
@@ -1073,48 +1053,7 @@ func (s *PipelineContext) Aggregation(i int) IAggregationContext {
 		return nil
 	}
 
-	return t.(IAggregationContext)
-}
-
-func (s *PipelineContext) AllAligner() []IAlignerContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IAlignerContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IAlignerContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IAlignerContext); ok {
-			tst[i] = t.(IAlignerContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *PipelineContext) Aligner(i int) IAlignerContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IAlignerContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IAlignerContext)
+	return t.(IPipelineStepContext)
 }
 
 func (s *PipelineContext) GetRuleContext() antlr.RuleContext {
@@ -1154,55 +1093,187 @@ func (p *PromQLPlusParser) Pipeline() (localctx IPipelineContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(61)
+		p.SetState(51)
 		p.Selector()
 	}
-	p.SetState(69)
+	p.SetState(56)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == PromQLPlusParserT__7 {
+	for _la == PromQLPlusParserT__6 {
 		{
-			p.SetState(62)
-			p.Match(PromQLPlusParserT__7)
+			p.SetState(52)
+			p.Match(PromQLPlusParserT__6)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(65)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
+		{
+			p.SetState(53)
+			p.PipelineStep()
 		}
 
-		switch p.GetTokenStream().LA(1) {
-		case PromQLPlusParserT__15, PromQLPlusParserT__16, PromQLPlusParserT__17, PromQLPlusParserT__18, PromQLPlusParserT__19, PromQLPlusParserT__20, PromQLPlusParserT__21, PromQLPlusParserT__22, PromQLPlusParserT__23, PromQLPlusParserT__24, PromQLPlusParserT__25:
-			{
-				p.SetState(63)
-				p.Aggregation()
-			}
-
-		case PromQLPlusParserIDENTIFIER:
-			{
-				p.SetState(64)
-				p.Aligner()
-			}
-
-		default:
-			p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
-			goto errorExit
-		}
-
-		p.SetState(71)
+		p.SetState(58)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
 		_la = p.GetTokenStream().LA(1)
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IPipelineStepContext is an interface to support dynamic dispatch.
+type IPipelineStepContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	Aggregation() IAggregationContext
+	Aligner() IAlignerContext
+
+	// IsPipelineStepContext differentiates from other interfaces.
+	IsPipelineStepContext()
+}
+
+type PipelineStepContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyPipelineStepContext() *PipelineStepContext {
+	var p = new(PipelineStepContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromQLPlusParserRULE_pipelineStep
+	return p
+}
+
+func InitEmptyPipelineStepContext(p *PipelineStepContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = PromQLPlusParserRULE_pipelineStep
+}
+
+func (*PipelineStepContext) IsPipelineStepContext() {}
+
+func NewPipelineStepContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PipelineStepContext {
+	var p = new(PipelineStepContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = PromQLPlusParserRULE_pipelineStep
+
+	return p
+}
+
+func (s *PipelineStepContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *PipelineStepContext) Aggregation() IAggregationContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IAggregationContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IAggregationContext)
+}
+
+func (s *PipelineStepContext) Aligner() IAlignerContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IAlignerContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IAlignerContext)
+}
+
+func (s *PipelineStepContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *PipelineStepContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *PipelineStepContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromQLPlusListener); ok {
+		listenerT.EnterPipelineStep(s)
+	}
+}
+
+func (s *PipelineStepContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(PromQLPlusListener); ok {
+		listenerT.ExitPipelineStep(s)
+	}
+}
+
+func (s *PipelineStepContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case PromQLPlusVisitor:
+		return t.VisitPipelineStep(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *PromQLPlusParser) PipelineStep() (localctx IPipelineStepContext) {
+	localctx = NewPipelineStepContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 12, PromQLPlusParserRULE_pipelineStep)
+	p.SetState(61)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetTokenStream().LA(1) {
+	case PromQLPlusParserAGGREGATION_OP:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(59)
+			p.Aggregation()
+		}
+
+	case PromQLPlusParserIDENTIFIER:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(60)
+			p.Aligner()
+		}
+
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+		goto errorExit
 	}
 
 errorExit:
@@ -1226,8 +1297,9 @@ type ISelectorContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	MetricIdentifier() IMetricIdentifierContext
-	LabelMatchers() ILabelMatchersContext
+	IDENTIFIER() antlr.TerminalNode
+	AllLabelMatcher() []ILabelMatcherContext
+	LabelMatcher(i int) ILabelMatcherContext
 
 	// IsSelectorContext differentiates from other interfaces.
 	IsSelectorContext()
@@ -1265,28 +1337,41 @@ func NewSelectorContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 
 func (s *SelectorContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *SelectorContext) MetricIdentifier() IMetricIdentifierContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IMetricIdentifierContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IMetricIdentifierContext)
+func (s *SelectorContext) IDENTIFIER() antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserIDENTIFIER, 0)
 }
 
-func (s *SelectorContext) LabelMatchers() ILabelMatchersContext {
+func (s *SelectorContext) AllLabelMatcher() []ILabelMatcherContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(ILabelMatcherContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]ILabelMatcherContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(ILabelMatcherContext); ok {
+			tst[i] = t.(ILabelMatcherContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *SelectorContext) LabelMatcher(i int) ILabelMatcherContext {
 	var t antlr.RuleContext
+	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ILabelMatchersContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
+		if _, ok := ctx.(ILabelMatcherContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
 		}
 	}
 
@@ -1294,7 +1379,7 @@ func (s *SelectorContext) LabelMatchers() ILabelMatchersContext {
 		return nil
 	}
 
-	return t.(ILabelMatchersContext)
+	return t.(ILabelMatcherContext)
 }
 
 func (s *SelectorContext) GetRuleContext() antlr.RuleContext {
@@ -1329,332 +1414,21 @@ func (s *SelectorContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromQLPlusParser) Selector() (localctx ISelectorContext) {
 	localctx = NewSelectorContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, PromQLPlusParserRULE_selector)
+	p.EnterRule(localctx, 14, PromQLPlusParserRULE_selector)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(72)
-		p.MetricIdentifier()
-	}
-	p.SetState(74)
+	p.SetState(64)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == PromQLPlusParserT__8 {
+	if _la == PromQLPlusParserIDENTIFIER {
 		{
-			p.SetState(73)
-			p.LabelMatchers()
-		}
-
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IMetricIdentifierContext is an interface to support dynamic dispatch.
-type IMetricIdentifierContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	IDENTIFIER() antlr.TerminalNode
-
-	// IsMetricIdentifierContext differentiates from other interfaces.
-	IsMetricIdentifierContext()
-}
-
-type MetricIdentifierContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyMetricIdentifierContext() *MetricIdentifierContext {
-	var p = new(MetricIdentifierContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_metricIdentifier
-	return p
-}
-
-func InitEmptyMetricIdentifierContext(p *MetricIdentifierContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_metricIdentifier
-}
-
-func (*MetricIdentifierContext) IsMetricIdentifierContext() {}
-
-func NewMetricIdentifierContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MetricIdentifierContext {
-	var p = new(MetricIdentifierContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromQLPlusParserRULE_metricIdentifier
-
-	return p
-}
-
-func (s *MetricIdentifierContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *MetricIdentifierContext) IDENTIFIER() antlr.TerminalNode {
-	return s.GetToken(PromQLPlusParserIDENTIFIER, 0)
-}
-
-func (s *MetricIdentifierContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *MetricIdentifierContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *MetricIdentifierContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.EnterMetricIdentifier(s)
-	}
-}
-
-func (s *MetricIdentifierContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.ExitMetricIdentifier(s)
-	}
-}
-
-func (s *MetricIdentifierContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromQLPlusVisitor:
-		return t.VisitMetricIdentifier(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromQLPlusParser) MetricIdentifier() (localctx IMetricIdentifierContext) {
-	localctx = NewMetricIdentifierContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, PromQLPlusParserRULE_metricIdentifier)
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(76)
-		p.Match(PromQLPlusParserIDENTIFIER)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// ILabelMatchersContext is an interface to support dynamic dispatch.
-type ILabelMatchersContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	AllLabelMatcher() []ILabelMatcherContext
-	LabelMatcher(i int) ILabelMatcherContext
-
-	// IsLabelMatchersContext differentiates from other interfaces.
-	IsLabelMatchersContext()
-}
-
-type LabelMatchersContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyLabelMatchersContext() *LabelMatchersContext {
-	var p = new(LabelMatchersContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_labelMatchers
-	return p
-}
-
-func InitEmptyLabelMatchersContext(p *LabelMatchersContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_labelMatchers
-}
-
-func (*LabelMatchersContext) IsLabelMatchersContext() {}
-
-func NewLabelMatchersContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LabelMatchersContext {
-	var p = new(LabelMatchersContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromQLPlusParserRULE_labelMatchers
-
-	return p
-}
-
-func (s *LabelMatchersContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *LabelMatchersContext) AllLabelMatcher() []ILabelMatcherContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(ILabelMatcherContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]ILabelMatcherContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(ILabelMatcherContext); ok {
-			tst[i] = t.(ILabelMatcherContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *LabelMatchersContext) LabelMatcher(i int) ILabelMatcherContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ILabelMatcherContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ILabelMatcherContext)
-}
-
-func (s *LabelMatchersContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *LabelMatchersContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *LabelMatchersContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.EnterLabelMatchers(s)
-	}
-}
-
-func (s *LabelMatchersContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.ExitLabelMatchers(s)
-	}
-}
-
-func (s *LabelMatchersContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromQLPlusVisitor:
-		return t.VisitLabelMatchers(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromQLPlusParser) LabelMatchers() (localctx ILabelMatchersContext) {
-	localctx = NewLabelMatchersContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, PromQLPlusParserRULE_labelMatchers)
-	var _la int
-
-	var _alt int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(78)
-		p.Match(PromQLPlusParserT__8)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(79)
-		p.LabelMatcher()
-	}
-	p.SetState(84)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext())
-	if p.HasError() {
-		goto errorExit
-	}
-	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
-		if _alt == 1 {
-			{
-				p.SetState(80)
-				p.Match(PromQLPlusParserT__0)
-				if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
-				}
-			}
-			{
-				p.SetState(81)
-				p.LabelMatcher()
-			}
-
-		}
-		p.SetState(86)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext())
-		if p.HasError() {
-			goto errorExit
-		}
-	}
-	p.SetState(88)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	if _la == PromQLPlusParserT__0 {
-		{
-			p.SetState(87)
-			p.Match(PromQLPlusParserT__0)
+			p.SetState(63)
+			p.Match(PromQLPlusParserIDENTIFIER)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
@@ -1662,13 +1436,73 @@ func (p *PromQLPlusParser) LabelMatchers() (localctx ILabelMatchersContext) {
 		}
 
 	}
-	{
-		p.SetState(90)
-		p.Match(PromQLPlusParserT__9)
+	p.SetState(78)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	if _la == PromQLPlusParserT__7 {
+		{
+			p.SetState(66)
+			p.Match(PromQLPlusParserT__7)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		p.SetState(75)
+		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
-			// Recognition error - abort rule
 			goto errorExit
 		}
+		_la = p.GetTokenStream().LA(1)
+
+		if _la == PromQLPlusParserIDENTIFIER {
+			{
+				p.SetState(67)
+				p.LabelMatcher()
+			}
+			p.SetState(72)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_la = p.GetTokenStream().LA(1)
+
+			for _la == PromQLPlusParserT__0 {
+				{
+					p.SetState(68)
+					p.Match(PromQLPlusParserT__0)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
+				}
+				{
+					p.SetState(69)
+					p.LabelMatcher()
+				}
+
+				p.SetState(74)
+				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
+				_la = p.GetTokenStream().LA(1)
+			}
+
+		}
+		{
+			p.SetState(77)
+			p.Match(PromQLPlusParserT__8)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
 	}
 
 errorExit:
@@ -1693,8 +1527,11 @@ type ILabelMatcherContext interface {
 
 	// Getter signatures
 	IDENTIFIER() antlr.TerminalNode
-	MatchOp() IMatchOpContext
 	STRING() antlr.TerminalNode
+	MATCH_EQ() antlr.TerminalNode
+	MATCH_NEQ() antlr.TerminalNode
+	MATCH_RE() antlr.TerminalNode
+	MATCH_NRE() antlr.TerminalNode
 
 	// IsLabelMatcherContext differentiates from other interfaces.
 	IsLabelMatcherContext()
@@ -1736,24 +1573,24 @@ func (s *LabelMatcherContext) IDENTIFIER() antlr.TerminalNode {
 	return s.GetToken(PromQLPlusParserIDENTIFIER, 0)
 }
 
-func (s *LabelMatcherContext) MatchOp() IMatchOpContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IMatchOpContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IMatchOpContext)
-}
-
 func (s *LabelMatcherContext) STRING() antlr.TerminalNode {
 	return s.GetToken(PromQLPlusParserSTRING, 0)
+}
+
+func (s *LabelMatcherContext) MATCH_EQ() antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserMATCH_EQ, 0)
+}
+
+func (s *LabelMatcherContext) MATCH_NEQ() antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserMATCH_NEQ, 0)
+}
+
+func (s *LabelMatcherContext) MATCH_RE() antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserMATCH_RE, 0)
+}
+
+func (s *LabelMatcherContext) MATCH_NRE() antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserMATCH_NRE, 0)
 }
 
 func (s *LabelMatcherContext) GetRuleContext() antlr.RuleContext {
@@ -1788,10 +1625,12 @@ func (s *LabelMatcherContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 
 func (p *PromQLPlusParser) LabelMatcher() (localctx ILabelMatcherContext) {
 	localctx = NewLabelMatcherContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, PromQLPlusParserRULE_labelMatcher)
+	p.EnterRule(localctx, 16, PromQLPlusParserRULE_labelMatcher)
+	var _la int
+
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(92)
+		p.SetState(80)
 		p.Match(PromQLPlusParserIDENTIFIER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1799,117 +1638,22 @@ func (p *PromQLPlusParser) LabelMatcher() (localctx ILabelMatcherContext) {
 		}
 	}
 	{
-		p.SetState(93)
-		p.MatchOp()
-	}
-	{
-		p.SetState(94)
-		p.Match(PromQLPlusParserSTRING)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IMatchOpContext is an interface to support dynamic dispatch.
-type IMatchOpContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-	// IsMatchOpContext differentiates from other interfaces.
-	IsMatchOpContext()
-}
-
-type MatchOpContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyMatchOpContext() *MatchOpContext {
-	var p = new(MatchOpContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_matchOp
-	return p
-}
-
-func InitEmptyMatchOpContext(p *MatchOpContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_matchOp
-}
-
-func (*MatchOpContext) IsMatchOpContext() {}
-
-func NewMatchOpContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *MatchOpContext {
-	var p = new(MatchOpContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromQLPlusParserRULE_matchOp
-
-	return p
-}
-
-func (s *MatchOpContext) GetParser() antlr.Parser { return s.parser }
-func (s *MatchOpContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *MatchOpContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *MatchOpContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.EnterMatchOp(s)
-	}
-}
-
-func (s *MatchOpContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.ExitMatchOp(s)
-	}
-}
-
-func (s *MatchOpContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromQLPlusVisitor:
-		return t.VisitMatchOp(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromQLPlusParser) MatchOp() (localctx IMatchOpContext) {
-	localctx = NewMatchOpContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, PromQLPlusParserRULE_matchOp)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(96)
+		p.SetState(81)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&14340) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&61440) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
 			p.Consume()
+		}
+	}
+	{
+		p.SetState(82)
+		p.Match(PromQLPlusParserSTRING)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
 		}
 	}
 
@@ -1934,10 +1678,11 @@ type IAggregationContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AggregationOp() IAggregationOpContext
+	AGGREGATION_OP() antlr.TerminalNode
 	BY() antlr.TerminalNode
 	WITHOUT() antlr.TerminalNode
-	LabelList() ILabelListContext
+	AllIDENTIFIER() []antlr.TerminalNode
+	IDENTIFIER(i int) antlr.TerminalNode
 
 	// IsAggregationContext differentiates from other interfaces.
 	IsAggregationContext()
@@ -1975,20 +1720,8 @@ func NewAggregationContext(parser antlr.Parser, parent antlr.ParserRuleContext, 
 
 func (s *AggregationContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *AggregationContext) AggregationOp() IAggregationOpContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IAggregationOpContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IAggregationOpContext)
+func (s *AggregationContext) AGGREGATION_OP() antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserAGGREGATION_OP, 0)
 }
 
 func (s *AggregationContext) BY() antlr.TerminalNode {
@@ -1999,20 +1732,12 @@ func (s *AggregationContext) WITHOUT() antlr.TerminalNode {
 	return s.GetToken(PromQLPlusParserWITHOUT, 0)
 }
 
-func (s *AggregationContext) LabelList() ILabelListContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ILabelListContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
+func (s *AggregationContext) AllIDENTIFIER() []antlr.TerminalNode {
+	return s.GetTokens(PromQLPlusParserIDENTIFIER)
+}
 
-	if t == nil {
-		return nil
-	}
-
-	return t.(ILabelListContext)
+func (s *AggregationContext) IDENTIFIER(i int) antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserIDENTIFIER, i)
 }
 
 func (s *AggregationContext) GetRuleContext() antlr.RuleContext {
@@ -2047,16 +1772,20 @@ func (s *AggregationContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 
 func (p *PromQLPlusParser) Aggregation() (localctx IAggregationContext) {
 	localctx = NewAggregationContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 22, PromQLPlusParserRULE_aggregation)
+	p.EnterRule(localctx, 18, PromQLPlusParserRULE_aggregation)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(98)
-		p.AggregationOp()
+		p.SetState(84)
+		p.Match(PromQLPlusParserAGGREGATION_OP)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
-		p.SetState(99)
+		p.SetState(85)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == PromQLPlusParserBY || _la == PromQLPlusParserWITHOUT) {
@@ -2066,23 +1795,23 @@ func (p *PromQLPlusParser) Aggregation() (localctx IAggregationContext) {
 			p.Consume()
 		}
 	}
-	p.SetState(105)
+	p.SetState(98)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	if _la == PromQLPlusParserT__13 {
+	if _la == PromQLPlusParserT__9 {
 		{
-			p.SetState(100)
-			p.Match(PromQLPlusParserT__13)
+			p.SetState(86)
+			p.Match(PromQLPlusParserT__9)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(102)
+		p.SetState(95)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2091,267 +1820,56 @@ func (p *PromQLPlusParser) Aggregation() (localctx IAggregationContext) {
 
 		if _la == PromQLPlusParserIDENTIFIER {
 			{
-				p.SetState(101)
-				p.LabelList()
+				p.SetState(87)
+				p.Match(PromQLPlusParserIDENTIFIER)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			p.SetState(92)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_la = p.GetTokenStream().LA(1)
+
+			for _la == PromQLPlusParserT__0 {
+				{
+					p.SetState(88)
+					p.Match(PromQLPlusParserT__0)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
+				}
+				{
+					p.SetState(89)
+					p.Match(PromQLPlusParserIDENTIFIER)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
+				}
+
+				p.SetState(94)
+				p.GetErrorHandler().Sync(p)
+				if p.HasError() {
+					goto errorExit
+				}
+				_la = p.GetTokenStream().LA(1)
 			}
 
 		}
 		{
-			p.SetState(104)
-			p.Match(PromQLPlusParserT__14)
+			p.SetState(97)
+			p.Match(PromQLPlusParserT__10)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
 
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// ILabelListContext is an interface to support dynamic dispatch.
-type ILabelListContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	AllIDENTIFIER() []antlr.TerminalNode
-	IDENTIFIER(i int) antlr.TerminalNode
-
-	// IsLabelListContext differentiates from other interfaces.
-	IsLabelListContext()
-}
-
-type LabelListContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyLabelListContext() *LabelListContext {
-	var p = new(LabelListContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_labelList
-	return p
-}
-
-func InitEmptyLabelListContext(p *LabelListContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_labelList
-}
-
-func (*LabelListContext) IsLabelListContext() {}
-
-func NewLabelListContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LabelListContext {
-	var p = new(LabelListContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromQLPlusParserRULE_labelList
-
-	return p
-}
-
-func (s *LabelListContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *LabelListContext) AllIDENTIFIER() []antlr.TerminalNode {
-	return s.GetTokens(PromQLPlusParserIDENTIFIER)
-}
-
-func (s *LabelListContext) IDENTIFIER(i int) antlr.TerminalNode {
-	return s.GetToken(PromQLPlusParserIDENTIFIER, i)
-}
-
-func (s *LabelListContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *LabelListContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *LabelListContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.EnterLabelList(s)
-	}
-}
-
-func (s *LabelListContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.ExitLabelList(s)
-	}
-}
-
-func (s *LabelListContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromQLPlusVisitor:
-		return t.VisitLabelList(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromQLPlusParser) LabelList() (localctx ILabelListContext) {
-	localctx = NewLabelListContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, PromQLPlusParserRULE_labelList)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(107)
-		p.Match(PromQLPlusParserIDENTIFIER)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(112)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	for _la == PromQLPlusParserT__0 {
-		{
-			p.SetState(108)
-			p.Match(PromQLPlusParserT__0)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(109)
-			p.Match(PromQLPlusParserIDENTIFIER)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-
-		p.SetState(114)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IAggregationOpContext is an interface to support dynamic dispatch.
-type IAggregationOpContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-	// IsAggregationOpContext differentiates from other interfaces.
-	IsAggregationOpContext()
-}
-
-type AggregationOpContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyAggregationOpContext() *AggregationOpContext {
-	var p = new(AggregationOpContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_aggregationOp
-	return p
-}
-
-func InitEmptyAggregationOpContext(p *AggregationOpContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_aggregationOp
-}
-
-func (*AggregationOpContext) IsAggregationOpContext() {}
-
-func NewAggregationOpContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *AggregationOpContext {
-	var p = new(AggregationOpContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromQLPlusParserRULE_aggregationOp
-
-	return p
-}
-
-func (s *AggregationOpContext) GetParser() antlr.Parser { return s.parser }
-func (s *AggregationOpContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *AggregationOpContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *AggregationOpContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.EnterAggregationOp(s)
-	}
-}
-
-func (s *AggregationOpContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.ExitAggregationOp(s)
-	}
-}
-
-func (s *AggregationOpContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromQLPlusVisitor:
-		return t.VisitAggregationOp(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromQLPlusParser) AggregationOp() (localctx IAggregationOpContext) {
-	localctx = NewAggregationOpContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 26, PromQLPlusParserRULE_aggregationOp)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(115)
-		_la = p.GetTokenStream().LA(1)
-
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&134152192) != 0) {
-			p.GetErrorHandler().RecoverInline(p)
-		} else {
-			p.GetErrorHandler().ReportMatch(p)
-			p.Consume()
-		}
 	}
 
 errorExit:
@@ -2376,7 +1894,7 @@ type IAlignerContext interface {
 
 	// Getter signatures
 	IDENTIFIER() antlr.TerminalNode
-	Duration() IDurationContext
+	DURATION() antlr.TerminalNode
 
 	// IsAlignerContext differentiates from other interfaces.
 	IsAlignerContext()
@@ -2418,20 +1936,8 @@ func (s *AlignerContext) IDENTIFIER() antlr.TerminalNode {
 	return s.GetToken(PromQLPlusParserIDENTIFIER, 0)
 }
 
-func (s *AlignerContext) Duration() IDurationContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IDurationContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IDurationContext)
+func (s *AlignerContext) DURATION() antlr.TerminalNode {
+	return s.GetToken(PromQLPlusParserDURATION, 0)
 }
 
 func (s *AlignerContext) GetRuleContext() antlr.RuleContext {
@@ -2466,10 +1972,10 @@ func (s *AlignerContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *PromQLPlusParser) Aligner() (localctx IAlignerContext) {
 	localctx = NewAlignerContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 28, PromQLPlusParserRULE_aligner)
+	p.EnterRule(localctx, 20, PromQLPlusParserRULE_aligner)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(117)
+		p.SetState(100)
 		p.Match(PromQLPlusParserIDENTIFIER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2477,123 +1983,8 @@ func (p *PromQLPlusParser) Aligner() (localctx IAlignerContext) {
 		}
 	}
 	{
-		p.SetState(118)
-		p.Duration()
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IDurationContext is an interface to support dynamic dispatch.
-type IDurationContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	NUMBER() antlr.TerminalNode
-	DURATION_UNIT() antlr.TerminalNode
-
-	// IsDurationContext differentiates from other interfaces.
-	IsDurationContext()
-}
-
-type DurationContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyDurationContext() *DurationContext {
-	var p = new(DurationContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_duration
-	return p
-}
-
-func InitEmptyDurationContext(p *DurationContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = PromQLPlusParserRULE_duration
-}
-
-func (*DurationContext) IsDurationContext() {}
-
-func NewDurationContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DurationContext {
-	var p = new(DurationContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = PromQLPlusParserRULE_duration
-
-	return p
-}
-
-func (s *DurationContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *DurationContext) NUMBER() antlr.TerminalNode {
-	return s.GetToken(PromQLPlusParserNUMBER, 0)
-}
-
-func (s *DurationContext) DURATION_UNIT() antlr.TerminalNode {
-	return s.GetToken(PromQLPlusParserDURATION_UNIT, 0)
-}
-
-func (s *DurationContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *DurationContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *DurationContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.EnterDuration(s)
-	}
-}
-
-func (s *DurationContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(PromQLPlusListener); ok {
-		listenerT.ExitDuration(s)
-	}
-}
-
-func (s *DurationContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case PromQLPlusVisitor:
-		return t.VisitDuration(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *PromQLPlusParser) Duration() (localctx IDurationContext) {
-	localctx = NewDurationContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 30, PromQLPlusParserRULE_duration)
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(120)
-		p.Match(PromQLPlusParserNUMBER)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(121)
-		p.Match(PromQLPlusParserDURATION_UNIT)
+		p.SetState(101)
+		p.Match(PromQLPlusParserDURATION)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit

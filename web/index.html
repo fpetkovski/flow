@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromQL+ Playground</title>
+
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css">
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .editor-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .CodeMirror {
+            height: 300px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .output {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .output h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .output-content {
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            min-height: 100px;
+            border: 1px solid #dee2e6;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .examples {
+            margin-bottom: 20px;
+        }
+
+        .example-link {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .example-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PromQL+ Playground</h1>
+
+        <div class="examples">
+            <strong>Examples:</strong>
+            <a class="example-link" onclick="loadExample('basic')">Basic Selector</a>
+            <a class="example-link" onclick="loadExample('aggregation')">Aggregation</a>
+            <a class="example-link" onclick="loadExample('let')">Let Expression</a>
+        </div>
+
+        <div class="editor-container">
+            <textarea id="code" name="code"></textarea>
+            <div class="controls">
+                <button onclick="parseQuery()">Parse</button>
+                <button onclick="clearEditor()">Clear</button>
+            </div>
+        </div>
+
+        <div class="output">
+            <h2>Output</h2>
+            <div id="output" class="output-content">
+                Click "Parse" to validate your PromQL+ query
+            </div>
+        </div>
+    </div>
+
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+
+    <!-- Custom PromQL+ mode -->
+    <script src="promqlplus-mode.js"></script>
+
+    <script type="module">
+        // Import ANTLR4 runtime and parser files
+        import antlr4 from 'https://cdn.jsdelivr.net/npm/antlr4@4.13.2/+esm';
+        import PromQLPlusLexer from './parser/PromQLPlusLexer.js';
+        import PromQLPlusParser from './parser/PromQLPlusParser.js';
+        import PromQLPlusListener from './parser/PromQLPlusListener.js';
+        import PromQLPlusVisitor from './parser/PromQLPlusVisitor.js';
+
+        // Make them available globally for debugging
+        window.antlr4 = antlr4;
+        window.PromQLPlusLexer = PromQLPlusLexer;
+        window.PromQLPlusParser = PromQLPlusParser;
+
+        // Initialize CodeMirror
+        const editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+            mode: 'promqlplus',
+            theme: 'default',
+            lineNumbers: true,
+            lineWrapping: true,
+            autofocus: true,
+            extraKeys: {
+                "Ctrl-Enter": function(cm) {
+                    parseQuery();
+                },
+                "Cmd-Enter": function(cm) {
+                    parseQuery();
+                }
+            }
+        });
+
+        // Example queries
+        const examples = {
+            basic: 'http_requests_total{method="GET", status="200"}',
+            aggregation: 'http_requests_total | sum by (method) | rate 5m',
+            let: `let
+    requests = http_requests_total | rate 5m | sum by (endpoint),
+    errors = http_errors_total | rate 5m | sum by (endpoint)
+in errors / requests`
+        };
+
+        function loadExample(type) {
+            editor.setValue(examples[type]);
+        }
+
+        function clearEditor() {
+            editor.setValue('');
+            document.getElementById('output').innerHTML = 'Click "Parse" to validate your PromQL+ query';
+            document.getElementById('output').className = 'output-content';
+        }
+
+        // Custom error listener
+        class CustomErrorListener extends antlr4.error.ErrorListener {
+            constructor() {
+                super();
+                this.errors = [];
+            }
+
+            syntaxError(recognizer, offendingSymbol, line, column, msg, err) {
+                this.errors.push(`line ${line}:${column} ${msg}`);
+            }
+        }
+
+        // Function to build a simple AST representation
+        function buildTreeString(ctx, indent = '') {
+            if (!ctx) return '';
+
+            let result = '';
+            const ruleName = ctx.constructor.name.replace('Context', '');
+            result += indent + ruleName + '\n';
+
+            // Get children
+            if (ctx.children) {
+                ctx.children.forEach(child => {
+                    if (child.constructor.name.includes('Context')) {
+                        result += buildTreeString(child, indent + '  ');
+                    } else if (child.symbol) {
+                        const text = child.getText();
+                        if (text !== '<EOF>') {
+                            result += indent + '  \'' + text + '\'\n';
+                        }
+                    }
+                });
+            }
+
+            return result;
+        }
+
+        function parseQuery() {
+            const query = editor.getValue();
+            const outputDiv = document.getElementById('output');
+
+            if (!query.trim()) {
+                outputDiv.innerHTML = 'Please enter a query';
+                outputDiv.className = 'output-content error';
+                return;
+            }
+
+            try {
+                // Create lexer and parser
+                const chars = new antlr4.InputStream(query);
+                const lexer = new PromQLPlusLexer(chars);
+                const tokens = new antlr4.CommonTokenStream(lexer);
+                const parser = new PromQLPlusParser(tokens);
+
+                // Add error listener
+                const errorListener = new CustomErrorListener();
+                parser.removeErrorListeners();
+                parser.addErrorListener(errorListener);
+
+                // Parse
+                const tree = parser.query();
+
+                if (errorListener.errors.length > 0) {
+                    outputDiv.innerHTML = 'Parse errors:\n' + errorListener.errors.join('\n');
+                    outputDiv.className = 'output-content error';
+                } else {
+                    const ast = buildTreeString(tree);
+                    outputDiv.innerHTML = 'Query parsed successfully!\n\nAST:\n' + ast;
+                    outputDiv.className = 'output-content success';
+                }
+            } catch (error) {
+                outputDiv.innerHTML = 'Error parsing query: ' + error.message;
+                outputDiv.className = 'output-content error';
+                console.error(error);
+            }
+        }
+
+        // Load a default example
+        loadExample('basic');
+
+        // Make functions available globally
+        window.loadExample = loadExample;
+        window.clearEditor = clearEditor;
+        window.parseQuery = parseQuery;
+    </script>
+</body>
+</html>
