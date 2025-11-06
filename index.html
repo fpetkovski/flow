@@ -43,6 +43,23 @@
             color: #666;
         }
 
+        .loading {
+            background: #88c0d0;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .ready {
+            background: #a3be8c;
+        }
+
+        .error-banner {
+            background: #bf616a;
+        }
+
         .editor-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -88,6 +105,11 @@
 
         .btn:active {
             transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            background: #4c566a;
+            cursor: not-allowed;
         }
 
         .CodeMirror {
@@ -147,24 +169,6 @@
             margin-top: 10px;
         }
 
-        .notice {
-            background: #4c566a;
-            color: #eceff4;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .notice a {
-            color: #88c0d0;
-            text-decoration: none;
-        }
-
-        .notice a:hover {
-            text-decoration: underline;
-        }
-
         @media (max-width: 768px) {
             .editor-container {
                 grid-template-columns: 1fr;
@@ -179,16 +183,13 @@
             <p>A PromQL extension with pipeline operators and let bindings</p>
         </header>
 
-        <div class="notice">
-            ⚠️ This is a simplified transpiler demo. For full functionality, use the Go implementation.
-            <a href="https://github.com/fpetkovski/let-ql" target="_blank">View on GitHub</a>
-        </div>
+        <div id="status" class="loading">Loading WebAssembly transpiler...</div>
 
         <div class="editor-container">
             <div class="editor-section">
                 <div class="section-header">
                     <h2>Flow Query</h2>
-                    <button id="format-btn" class="btn">Format</button>
+                    <button id="format-btn" class="btn" disabled>Format</button>
                 </div>
                 <textarea id="flow-editor"></textarea>
             </div>
@@ -216,6 +217,10 @@
 
     <!-- CodeMirror JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+
+    <!-- Load WASM runtime and module -->
+    <script src="web/wasm-runtime.js"></script>
+    <script src="web/flow-wasm.js"></script>
 
     <script>
         // CodeMirror mode for Flow Query Language
@@ -351,90 +356,10 @@
 
         CodeMirror.defineMIME("text/x-flow", "flow");
 
-        // Simple transpiler (pattern-based for demo purposes)
-        function transpileFlow(input) {
-            try {
-                let result = input;
-                let bindings = {};
-
-                // Handle let expressions
-                const letMatch = input.match(/^let\s+([\s\S]*?)\s+in\s+([\s\S]+)$/);
-                if (letMatch) {
-                    const bindingsStr = letMatch[1];
-                    const expression = letMatch[2];
-
-                    // Parse bindings
-                    const bindingRegex = /(\w+)\s*=\s*([^,]+?)(?=\s*,\s*\w+\s*=|$)/g;
-                    let match;
-                    while ((match = bindingRegex.exec(bindingsStr)) !== null) {
-                        const name = match[1].trim();
-                        const value = transpilePipeline(match[2].trim());
-                        bindings[name] = value;
-                    }
-
-                    // Replace variables in expression
-                    result = expression;
-                    for (const [name, value] of Object.entries(bindings)) {
-                        result = result.replace(new RegExp('\\b' + name + '\\b', 'g'), value);
-                    }
-                } else {
-                    // Just a pipeline
-                    result = transpilePipeline(input);
-                }
-
-                return {
-                    success: true,
-                    result: result
-                };
-            } catch (error) {
-                return {
-                    success: false,
-                    error: error.message
-                };
-            }
-        }
-
-        function transpilePipeline(input) {
-            const parts = input.split('|').map(p => p.trim());
-
-            if (parts.length === 1) {
-                return parts[0];
-            }
-
-            let result = parts[0];
-
-            for (let i = 1; i < parts.length; i++) {
-                const step = parts[i];
-
-                // Check if it's a function with duration
-                const funcMatch = step.match(/^(\w+)\s+(\d+[smhdwy])$/);
-                if (funcMatch) {
-                    result = `${funcMatch[1]}(${result}[${funcMatch[2]}])`;
-                    continue;
-                }
-
-                // Check if it's an aggregation
-                const aggMatch = step.match(/^(sum|min|max|avg|count|stddev|stdvar|topk|bottomk|quantile|count_values)(?:\s+(by|without)\s*\((.*?)\))?$/);
-                if (aggMatch) {
-                    const op = aggMatch[1];
-                    const modifier = aggMatch[2] || '';
-                    const labels = aggMatch[3] || '';
-
-                    if (modifier) {
-                        result = `${op} ${modifier} (${labels}) (${result})`;
-                    } else {
-                        result = `${op}(${result})`;
-                    }
-                    continue;
-                }
-            }
-
-            return result;
-        }
-
         // Initialize the application
         let editor;
         let outputDiv;
+        let wasmReady = false;
 
         const examples = {
             simple: 'http_requests_total{method="POST"}',
@@ -450,45 +375,45 @@ in req_get / req_total`,
 in (errors / total) * 100`
         };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const textarea = document.getElementById('flow-editor');
-            editor = CodeMirror.fromTextArea(textarea, {
-                mode: 'flow',
-                theme: 'monokai',
-                lineNumbers: true,
-                lineWrapping: true,
-                indentUnit: 2,
-                indentWithTabs: false
-            });
+        // Load WASM from the global variable set by flow-wasm.js
+        async function loadWasm() {
+            try {
+                if (typeof FLOW_WASM_BASE64 === 'undefined') {
+                    throw new Error('WASM module not found. Make sure flow-wasm.js is loaded.');
+                }
 
-            editor.setValue(examples.pipeline);
-            outputDiv = document.getElementById('promql-output');
+                // Decode base64 to bytes
+                const binaryString = atob(FLOW_WASM_BASE64.trim());
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
 
-            document.getElementById('format-btn').addEventListener('click', formatQuery);
-            document.getElementById('copy-btn').addEventListener('click', copyOutput);
+                const go = new Go();
+                const result = await WebAssembly.instantiate(bytes, go.importObject);
+                go.run(result.instance);
 
-            document.querySelectorAll('.example-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const example = this.getAttribute('data-example');
-                    if (examples[example]) {
-                        editor.setValue(examples[example]);
-                        transpile();
-                    }
-                });
-            });
+                wasmReady = true;
+                document.getElementById('status').textContent = 'Ready! Using WebAssembly transpiler.';
+                document.getElementById('status').classList.remove('loading');
+                document.getElementById('status').classList.add('ready');
+                document.getElementById('format-btn').disabled = false;
 
-            let transpileTimeout;
-            editor.on('change', function() {
-                clearTimeout(transpileTimeout);
-                transpileTimeout = setTimeout(transpile, 500);
-            });
-
-            transpile();
-        });
+                // Initial transpilation
+                transpile();
+            } catch (error) {
+                console.error('Failed to load WASM:', error);
+                document.getElementById('status').textContent = 'Failed to load WebAssembly: ' + error.message;
+                document.getElementById('status').classList.remove('loading');
+                document.getElementById('status').classList.add('error-banner');
+            }
+        }
 
         function transpile() {
+            if (!wasmReady) return;
+
             const input = editor.getValue();
-            const result = transpileFlow(input);
+            const result = window.transpileFlow(input);
 
             if (result.success) {
                 outputDiv.textContent = result.result;
@@ -545,6 +470,43 @@ in (errors / total) * 100`
             };
             return text.replace(/[&<>"']/g, m => map[m]);
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('flow-editor');
+            editor = CodeMirror.fromTextArea(textarea, {
+                mode: 'flow',
+                theme: 'monokai',
+                lineNumbers: true,
+                lineWrapping: true,
+                indentUnit: 2,
+                indentWithTabs: false
+            });
+
+            editor.setValue(examples.pipeline);
+            outputDiv = document.getElementById('promql-output');
+
+            document.getElementById('format-btn').addEventListener('click', formatQuery);
+            document.getElementById('copy-btn').addEventListener('click', copyOutput);
+
+            document.querySelectorAll('.example-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const example = this.getAttribute('data-example');
+                    if (examples[example]) {
+                        editor.setValue(examples[example]);
+                        transpile();
+                    }
+                });
+            });
+
+            let transpileTimeout;
+            editor.on('change', function() {
+                clearTimeout(transpileTimeout);
+                transpileTimeout = setTimeout(transpile, 500);
+            });
+
+            // Load WASM
+            loadWasm();
+        });
     </script>
 </body>
 </html>

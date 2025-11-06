@@ -32,10 +32,6 @@ gen: $(ANTLR_JAR)
 	@mkdir -p $(PARSER_DIR)
 	@java -jar $(ANTLR_JAR) -Dlanguage=Go -o $(PARSER_DIR) -package parser -visitor $(GRAMMAR)
 	@echo "Moving generated files to correct location..."
-	@if [ -d "$(PARSER_DIR)/grammar" ]; then \
-		mv $(PARSER_DIR)/grammar/* $(PARSER_DIR)/; \
-		rmdir $(PARSER_DIR)/grammar; \
-	fi
 	@echo "Parser generation complete!"
 
 # Generate JavaScript parser
@@ -55,7 +51,7 @@ gen-js: $(ANTLR_JAR)
 .PHONY: clean
 clean:
 	@echo "Cleaning generated parser files..."
-	@rm -rf $(PARSER_DIR)/*
+	@rm $(PARSER_DIR)/*
 	@echo "Clean complete!"
 
 # Clean everything including ANTLR jar
@@ -71,3 +67,26 @@ test: gen
 	@echo "Running tests..."
 	@go test ./...
 	@echo "Tests complete!"
+
+# Build WASM
+.PHONY: wasm
+wasm: gen
+	@echo "Building WebAssembly module..."
+	@mkdir -p web
+	@GOOS=js GOARCH=wasm go build -o web/flow-transpiler.wasm wasm.go
+	@echo "Downloading WASM support file..."
+	@curl -s https://raw.githubusercontent.com/golang/go/release-branch.go1.21/misc/wasm/wasm_exec.js > web/wasm_exec.js
+	@echo "WASM build complete!"
+
+# Generate JavaScript files with WASM
+.PHONY: wasm-js
+wasm-js: wasm
+	@echo "Generating JavaScript files..."
+	@chmod +x scripts/generate-wasm-js.sh
+	@./scripts/generate-wasm-js.sh
+	@rm -f web/flow-transpiler.wasm web/wasm_exec.js
+	@echo "Web files ready! Open web/flow-playground.html in your browser"
+
+# Alias for wasm-js (main web target)
+.PHONY: web
+web: wasm-js

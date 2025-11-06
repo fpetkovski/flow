@@ -49,54 +49,55 @@ func flowParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 30, 119, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 30, 120, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 3, 0, 31, 8, 0, 1,
 		1, 1, 1, 1, 1, 1, 1, 5, 1, 37, 8, 1, 10, 1, 12, 1, 40, 9, 1, 1, 1, 1, 1,
 		1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 3, 1, 3, 1, 3, 1, 3, 5, 3, 53, 8, 3, 10,
-		3, 12, 3, 56, 9, 3, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 3, 5, 65,
-		8, 5, 1, 6, 1, 6, 1, 6, 5, 6, 70, 8, 6, 10, 6, 12, 6, 73, 9, 6, 1, 7, 1,
-		7, 3, 7, 77, 8, 7, 1, 8, 3, 8, 80, 8, 8, 1, 8, 1, 8, 1, 8, 1, 8, 5, 8,
-		86, 8, 8, 10, 8, 12, 8, 89, 9, 8, 3, 8, 91, 8, 8, 1, 8, 3, 8, 94, 8, 8,
-		1, 9, 1, 9, 1, 9, 1, 9, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 5, 10,
-		106, 8, 10, 10, 10, 12, 10, 109, 9, 10, 3, 10, 111, 8, 10, 1, 10, 3, 10,
-		114, 8, 10, 1, 11, 1, 11, 1, 11, 1, 11, 0, 0, 12, 0, 2, 4, 6, 8, 10, 12,
-		14, 16, 18, 20, 22, 0, 3, 1, 0, 11, 14, 1, 0, 7, 10, 1, 0, 15, 16, 119,
-		0, 30, 1, 0, 0, 0, 2, 32, 1, 0, 0, 0, 4, 44, 1, 0, 0, 0, 6, 48, 1, 0, 0,
-		0, 8, 57, 1, 0, 0, 0, 10, 64, 1, 0, 0, 0, 12, 66, 1, 0, 0, 0, 14, 76, 1,
-		0, 0, 0, 16, 79, 1, 0, 0, 0, 18, 95, 1, 0, 0, 0, 20, 99, 1, 0, 0, 0, 22,
-		115, 1, 0, 0, 0, 24, 25, 3, 2, 1, 0, 25, 26, 5, 0, 0, 1, 26, 31, 1, 0,
-		0, 0, 27, 28, 3, 12, 6, 0, 28, 29, 5, 0, 0, 1, 29, 31, 1, 0, 0, 0, 30,
-		24, 1, 0, 0, 0, 30, 27, 1, 0, 0, 0, 31, 1, 1, 0, 0, 0, 32, 33, 5, 19, 0,
-		0, 33, 38, 3, 4, 2, 0, 34, 35, 5, 1, 0, 0, 35, 37, 3, 4, 2, 0, 36, 34,
-		1, 0, 0, 0, 37, 40, 1, 0, 0, 0, 38, 36, 1, 0, 0, 0, 38, 39, 1, 0, 0, 0,
-		39, 41, 1, 0, 0, 0, 40, 38, 1, 0, 0, 0, 41, 42, 5, 20, 0, 0, 42, 43, 3,
-		6, 3, 0, 43, 3, 1, 0, 0, 0, 44, 45, 5, 26, 0, 0, 45, 46, 5, 7, 0, 0, 46,
-		47, 3, 12, 6, 0, 47, 5, 1, 0, 0, 0, 48, 54, 3, 10, 5, 0, 49, 50, 3, 8,
-		4, 0, 50, 51, 3, 10, 5, 0, 51, 53, 1, 0, 0, 0, 52, 49, 1, 0, 0, 0, 53,
-		56, 1, 0, 0, 0, 54, 52, 1, 0, 0, 0, 54, 55, 1, 0, 0, 0, 55, 7, 1, 0, 0,
-		0, 56, 54, 1, 0, 0, 0, 57, 58, 7, 0, 0, 0, 58, 9, 1, 0, 0, 0, 59, 65, 5,
-		26, 0, 0, 60, 61, 5, 2, 0, 0, 61, 62, 3, 6, 3, 0, 62, 63, 5, 3, 0, 0, 63,
-		65, 1, 0, 0, 0, 64, 59, 1, 0, 0, 0, 64, 60, 1, 0, 0, 0, 65, 11, 1, 0, 0,
-		0, 66, 71, 3, 16, 8, 0, 67, 68, 5, 4, 0, 0, 68, 70, 3, 14, 7, 0, 69, 67,
-		1, 0, 0, 0, 70, 73, 1, 0, 0, 0, 71, 69, 1, 0, 0, 0, 71, 72, 1, 0, 0, 0,
-		72, 13, 1, 0, 0, 0, 73, 71, 1, 0, 0, 0, 74, 77, 3, 20, 10, 0, 75, 77, 3,
-		22, 11, 0, 76, 74, 1, 0, 0, 0, 76, 75, 1, 0, 0, 0, 77, 15, 1, 0, 0, 0,
-		78, 80, 5, 26, 0, 0, 79, 78, 1, 0, 0, 0, 79, 80, 1, 0, 0, 0, 80, 93, 1,
-		0, 0, 0, 81, 90, 5, 5, 0, 0, 82, 87, 3, 18, 9, 0, 83, 84, 5, 1, 0, 0, 84,
-		86, 3, 18, 9, 0, 85, 83, 1, 0, 0, 0, 86, 89, 1, 0, 0, 0, 87, 85, 1, 0,
-		0, 0, 87, 88, 1, 0, 0, 0, 88, 91, 1, 0, 0, 0, 89, 87, 1, 0, 0, 0, 90, 82,
-		1, 0, 0, 0, 90, 91, 1, 0, 0, 0, 91, 92, 1, 0, 0, 0, 92, 94, 5, 6, 0, 0,
-		93, 81, 1, 0, 0, 0, 93, 94, 1, 0, 0, 0, 94, 17, 1, 0, 0, 0, 95, 96, 5,
-		26, 0, 0, 96, 97, 7, 1, 0, 0, 97, 98, 5, 27, 0, 0, 98, 19, 1, 0, 0, 0,
-		99, 100, 5, 17, 0, 0, 100, 113, 7, 2, 0, 0, 101, 110, 5, 2, 0, 0, 102,
-		107, 5, 26, 0, 0, 103, 104, 5, 1, 0, 0, 104, 106, 5, 26, 0, 0, 105, 103,
-		1, 0, 0, 0, 106, 109, 1, 0, 0, 0, 107, 105, 1, 0, 0, 0, 107, 108, 1, 0,
-		0, 0, 108, 111, 1, 0, 0, 0, 109, 107, 1, 0, 0, 0, 110, 102, 1, 0, 0, 0,
-		110, 111, 1, 0, 0, 0, 111, 112, 1, 0, 0, 0, 112, 114, 5, 3, 0, 0, 113,
-		101, 1, 0, 0, 0, 113, 114, 1, 0, 0, 0, 114, 21, 1, 0, 0, 0, 115, 116, 5,
-		26, 0, 0, 116, 117, 5, 18, 0, 0, 117, 23, 1, 0, 0, 0, 13, 30, 38, 54, 64,
-		71, 76, 79, 87, 90, 93, 107, 110, 113,
+		3, 12, 3, 56, 9, 3, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 3,
+		5, 66, 8, 5, 1, 6, 1, 6, 1, 6, 5, 6, 71, 8, 6, 10, 6, 12, 6, 74, 9, 6,
+		1, 7, 1, 7, 3, 7, 78, 8, 7, 1, 8, 3, 8, 81, 8, 8, 1, 8, 1, 8, 1, 8, 1,
+		8, 5, 8, 87, 8, 8, 10, 8, 12, 8, 90, 9, 8, 3, 8, 92, 8, 8, 1, 8, 3, 8,
+		95, 8, 8, 1, 9, 1, 9, 1, 9, 1, 9, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1,
+		10, 5, 10, 107, 8, 10, 10, 10, 12, 10, 110, 9, 10, 3, 10, 112, 8, 10, 1,
+		10, 3, 10, 115, 8, 10, 1, 11, 1, 11, 1, 11, 1, 11, 0, 0, 12, 0, 2, 4, 6,
+		8, 10, 12, 14, 16, 18, 20, 22, 0, 3, 1, 0, 11, 14, 1, 0, 7, 10, 1, 0, 15,
+		16, 121, 0, 30, 1, 0, 0, 0, 2, 32, 1, 0, 0, 0, 4, 44, 1, 0, 0, 0, 6, 48,
+		1, 0, 0, 0, 8, 57, 1, 0, 0, 0, 10, 65, 1, 0, 0, 0, 12, 67, 1, 0, 0, 0,
+		14, 77, 1, 0, 0, 0, 16, 80, 1, 0, 0, 0, 18, 96, 1, 0, 0, 0, 20, 100, 1,
+		0, 0, 0, 22, 116, 1, 0, 0, 0, 24, 25, 3, 2, 1, 0, 25, 26, 5, 0, 0, 1, 26,
+		31, 1, 0, 0, 0, 27, 28, 3, 12, 6, 0, 28, 29, 5, 0, 0, 1, 29, 31, 1, 0,
+		0, 0, 30, 24, 1, 0, 0, 0, 30, 27, 1, 0, 0, 0, 31, 1, 1, 0, 0, 0, 32, 33,
+		5, 19, 0, 0, 33, 38, 3, 4, 2, 0, 34, 35, 5, 1, 0, 0, 35, 37, 3, 4, 2, 0,
+		36, 34, 1, 0, 0, 0, 37, 40, 1, 0, 0, 0, 38, 36, 1, 0, 0, 0, 38, 39, 1,
+		0, 0, 0, 39, 41, 1, 0, 0, 0, 40, 38, 1, 0, 0, 0, 41, 42, 5, 20, 0, 0, 42,
+		43, 3, 6, 3, 0, 43, 3, 1, 0, 0, 0, 44, 45, 5, 26, 0, 0, 45, 46, 5, 7, 0,
+		0, 46, 47, 3, 12, 6, 0, 47, 5, 1, 0, 0, 0, 48, 54, 3, 10, 5, 0, 49, 50,
+		3, 8, 4, 0, 50, 51, 3, 10, 5, 0, 51, 53, 1, 0, 0, 0, 52, 49, 1, 0, 0, 0,
+		53, 56, 1, 0, 0, 0, 54, 52, 1, 0, 0, 0, 54, 55, 1, 0, 0, 0, 55, 7, 1, 0,
+		0, 0, 56, 54, 1, 0, 0, 0, 57, 58, 7, 0, 0, 0, 58, 9, 1, 0, 0, 0, 59, 66,
+		5, 26, 0, 0, 60, 66, 5, 24, 0, 0, 61, 62, 5, 2, 0, 0, 62, 63, 3, 6, 3,
+		0, 63, 64, 5, 3, 0, 0, 64, 66, 1, 0, 0, 0, 65, 59, 1, 0, 0, 0, 65, 60,
+		1, 0, 0, 0, 65, 61, 1, 0, 0, 0, 66, 11, 1, 0, 0, 0, 67, 72, 3, 16, 8, 0,
+		68, 69, 5, 4, 0, 0, 69, 71, 3, 14, 7, 0, 70, 68, 1, 0, 0, 0, 71, 74, 1,
+		0, 0, 0, 72, 70, 1, 0, 0, 0, 72, 73, 1, 0, 0, 0, 73, 13, 1, 0, 0, 0, 74,
+		72, 1, 0, 0, 0, 75, 78, 3, 20, 10, 0, 76, 78, 3, 22, 11, 0, 77, 75, 1,
+		0, 0, 0, 77, 76, 1, 0, 0, 0, 78, 15, 1, 0, 0, 0, 79, 81, 5, 26, 0, 0, 80,
+		79, 1, 0, 0, 0, 80, 81, 1, 0, 0, 0, 81, 94, 1, 0, 0, 0, 82, 91, 5, 5, 0,
+		0, 83, 88, 3, 18, 9, 0, 84, 85, 5, 1, 0, 0, 85, 87, 3, 18, 9, 0, 86, 84,
+		1, 0, 0, 0, 87, 90, 1, 0, 0, 0, 88, 86, 1, 0, 0, 0, 88, 89, 1, 0, 0, 0,
+		89, 92, 1, 0, 0, 0, 90, 88, 1, 0, 0, 0, 91, 83, 1, 0, 0, 0, 91, 92, 1,
+		0, 0, 0, 92, 93, 1, 0, 0, 0, 93, 95, 5, 6, 0, 0, 94, 82, 1, 0, 0, 0, 94,
+		95, 1, 0, 0, 0, 95, 17, 1, 0, 0, 0, 96, 97, 5, 26, 0, 0, 97, 98, 7, 1,
+		0, 0, 98, 99, 5, 27, 0, 0, 99, 19, 1, 0, 0, 0, 100, 101, 5, 17, 0, 0, 101,
+		114, 7, 2, 0, 0, 102, 111, 5, 2, 0, 0, 103, 108, 5, 26, 0, 0, 104, 105,
+		5, 1, 0, 0, 105, 107, 5, 26, 0, 0, 106, 104, 1, 0, 0, 0, 107, 110, 1, 0,
+		0, 0, 108, 106, 1, 0, 0, 0, 108, 109, 1, 0, 0, 0, 109, 112, 1, 0, 0, 0,
+		110, 108, 1, 0, 0, 0, 111, 103, 1, 0, 0, 0, 111, 112, 1, 0, 0, 0, 112,
+		113, 1, 0, 0, 0, 113, 115, 5, 3, 0, 0, 114, 102, 1, 0, 0, 0, 114, 115,
+		1, 0, 0, 0, 115, 21, 1, 0, 0, 0, 116, 117, 5, 26, 0, 0, 117, 118, 5, 18,
+		0, 0, 118, 23, 1, 0, 0, 0, 13, 30, 38, 54, 65, 72, 77, 80, 88, 91, 94,
+		108, 111, 114,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -1056,6 +1057,7 @@ type IPrimaryExpressionContext interface {
 
 	// Getter signatures
 	IDENTIFIER() antlr.TerminalNode
+	NUMBER() antlr.TerminalNode
 	BinaryExpression() IBinaryExpressionContext
 
 	// IsPrimaryExpressionContext differentiates from other interfaces.
@@ -1096,6 +1098,10 @@ func (s *PrimaryExpressionContext) GetParser() antlr.Parser { return s.parser }
 
 func (s *PrimaryExpressionContext) IDENTIFIER() antlr.TerminalNode {
 	return s.GetToken(FlowParserIDENTIFIER, 0)
+}
+
+func (s *PrimaryExpressionContext) NUMBER() antlr.TerminalNode {
+	return s.GetToken(FlowParserNUMBER, 0)
 }
 
 func (s *PrimaryExpressionContext) BinaryExpression() IBinaryExpressionContext {
@@ -1147,7 +1153,7 @@ func (s *PrimaryExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interf
 func (p *FlowParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
 	localctx = NewPrimaryExpressionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 10, FlowParserRULE_primaryExpression)
-	p.SetState(64)
+	p.SetState(65)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1165,10 +1171,21 @@ func (p *FlowParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
 			}
 		}
 
-	case FlowParserT__1:
+	case FlowParserNUMBER:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(60)
+			p.Match(FlowParserNUMBER)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	case FlowParserT__1:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(61)
 			p.Match(FlowParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1176,11 +1193,11 @@ func (p *FlowParser) PrimaryExpression() (localctx IPrimaryExpressionContext) {
 			}
 		}
 		{
-			p.SetState(61)
+			p.SetState(62)
 			p.BinaryExpression()
 		}
 		{
-			p.SetState(62)
+			p.SetState(63)
 			p.Match(FlowParserT__2)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1348,10 +1365,10 @@ func (p *FlowParser) Pipeline() (localctx IPipelineContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(66)
+		p.SetState(67)
 		p.Selector()
 	}
-	p.SetState(71)
+	p.SetState(72)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1360,7 +1377,7 @@ func (p *FlowParser) Pipeline() (localctx IPipelineContext) {
 
 	for _la == FlowParserT__3 {
 		{
-			p.SetState(67)
+			p.SetState(68)
 			p.Match(FlowParserT__3)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1368,11 +1385,11 @@ func (p *FlowParser) Pipeline() (localctx IPipelineContext) {
 			}
 		}
 		{
-			p.SetState(68)
+			p.SetState(69)
 			p.PipelineStep()
 		}
 
-		p.SetState(73)
+		p.SetState(74)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1505,7 +1522,7 @@ func (s *PipelineStepContext) Accept(visitor antlr.ParseTreeVisitor) interface{}
 func (p *FlowParser) PipelineStep() (localctx IPipelineStepContext) {
 	localctx = NewPipelineStepContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 14, FlowParserRULE_pipelineStep)
-	p.SetState(76)
+	p.SetState(77)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1515,14 +1532,14 @@ func (p *FlowParser) PipelineStep() (localctx IPipelineStepContext) {
 	case FlowParserAGGREGATION_OP:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(74)
+			p.SetState(75)
 			p.Aggregation()
 		}
 
 	case FlowParserIDENTIFIER:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(75)
+			p.SetState(76)
 			p.Aligner()
 		}
 
@@ -1673,7 +1690,7 @@ func (p *FlowParser) Selector() (localctx ISelectorContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(79)
+	p.SetState(80)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1682,7 +1699,7 @@ func (p *FlowParser) Selector() (localctx ISelectorContext) {
 
 	if _la == FlowParserIDENTIFIER {
 		{
-			p.SetState(78)
+			p.SetState(79)
 			p.Match(FlowParserIDENTIFIER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1691,7 +1708,7 @@ func (p *FlowParser) Selector() (localctx ISelectorContext) {
 		}
 
 	}
-	p.SetState(93)
+	p.SetState(94)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1700,14 +1717,14 @@ func (p *FlowParser) Selector() (localctx ISelectorContext) {
 
 	if _la == FlowParserT__4 {
 		{
-			p.SetState(81)
+			p.SetState(82)
 			p.Match(FlowParserT__4)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(90)
+		p.SetState(91)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -1716,10 +1733,10 @@ func (p *FlowParser) Selector() (localctx ISelectorContext) {
 
 		if _la == FlowParserIDENTIFIER {
 			{
-				p.SetState(82)
+				p.SetState(83)
 				p.LabelMatcher()
 			}
-			p.SetState(87)
+			p.SetState(88)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -1728,7 +1745,7 @@ func (p *FlowParser) Selector() (localctx ISelectorContext) {
 
 			for _la == FlowParserT__0 {
 				{
-					p.SetState(83)
+					p.SetState(84)
 					p.Match(FlowParserT__0)
 					if p.HasError() {
 						// Recognition error - abort rule
@@ -1736,11 +1753,11 @@ func (p *FlowParser) Selector() (localctx ISelectorContext) {
 					}
 				}
 				{
-					p.SetState(84)
+					p.SetState(85)
 					p.LabelMatcher()
 				}
 
-				p.SetState(89)
+				p.SetState(90)
 				p.GetErrorHandler().Sync(p)
 				if p.HasError() {
 					goto errorExit
@@ -1750,7 +1767,7 @@ func (p *FlowParser) Selector() (localctx ISelectorContext) {
 
 		}
 		{
-			p.SetState(92)
+			p.SetState(93)
 			p.Match(FlowParserT__5)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1885,7 +1902,7 @@ func (p *FlowParser) LabelMatcher() (localctx ILabelMatcherContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(95)
+		p.SetState(96)
 		p.Match(FlowParserIDENTIFIER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1893,7 +1910,7 @@ func (p *FlowParser) LabelMatcher() (localctx ILabelMatcherContext) {
 		}
 	}
 	{
-		p.SetState(96)
+		p.SetState(97)
 		_la = p.GetTokenStream().LA(1)
 
 		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1920) != 0) {
@@ -1904,7 +1921,7 @@ func (p *FlowParser) LabelMatcher() (localctx ILabelMatcherContext) {
 		}
 	}
 	{
-		p.SetState(97)
+		p.SetState(98)
 		p.Match(FlowParserSTRING)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2032,7 +2049,7 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(99)
+		p.SetState(100)
 		p.Match(FlowParserAGGREGATION_OP)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2040,7 +2057,7 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 		}
 	}
 	{
-		p.SetState(100)
+		p.SetState(101)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == FlowParserBY || _la == FlowParserWITHOUT) {
@@ -2050,7 +2067,7 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 			p.Consume()
 		}
 	}
-	p.SetState(113)
+	p.SetState(114)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2059,14 +2076,14 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 
 	if _la == FlowParserT__1 {
 		{
-			p.SetState(101)
+			p.SetState(102)
 			p.Match(FlowParserT__1)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(110)
+		p.SetState(111)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -2075,14 +2092,14 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 
 		if _la == FlowParserIDENTIFIER {
 			{
-				p.SetState(102)
+				p.SetState(103)
 				p.Match(FlowParserIDENTIFIER)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit
 				}
 			}
-			p.SetState(107)
+			p.SetState(108)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
@@ -2091,7 +2108,7 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 
 			for _la == FlowParserT__0 {
 				{
-					p.SetState(103)
+					p.SetState(104)
 					p.Match(FlowParserT__0)
 					if p.HasError() {
 						// Recognition error - abort rule
@@ -2099,7 +2116,7 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 					}
 				}
 				{
-					p.SetState(104)
+					p.SetState(105)
 					p.Match(FlowParserIDENTIFIER)
 					if p.HasError() {
 						// Recognition error - abort rule
@@ -2107,7 +2124,7 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 					}
 				}
 
-				p.SetState(109)
+				p.SetState(110)
 				p.GetErrorHandler().Sync(p)
 				if p.HasError() {
 					goto errorExit
@@ -2117,7 +2134,7 @@ func (p *FlowParser) Aggregation() (localctx IAggregationContext) {
 
 		}
 		{
-			p.SetState(112)
+			p.SetState(113)
 			p.Match(FlowParserT__2)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2230,7 +2247,7 @@ func (p *FlowParser) Aligner() (localctx IAlignerContext) {
 	p.EnterRule(localctx, 22, FlowParserRULE_aligner)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(115)
+		p.SetState(116)
 		p.Match(FlowParserIDENTIFIER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2238,7 +2255,7 @@ func (p *FlowParser) Aligner() (localctx IAlignerContext) {
 		}
 	}
 	{
-		p.SetState(116)
+		p.SetState(117)
 		p.Match(FlowParserDURATION)
 		if p.HasError() {
 			// Recognition error - abort rule

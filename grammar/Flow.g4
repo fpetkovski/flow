@@ -27,6 +27,7 @@ binaryOperator
 
 primaryExpression
     : IDENTIFIER
+    | NUMBER
     | '(' binaryExpression ')'
     ;
 
