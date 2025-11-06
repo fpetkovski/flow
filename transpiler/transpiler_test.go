@@ -107,6 +107,27 @@ in 100 * (req_total - req_get) / req_total
 sum by (endpoint) (rate(http_requests_total[5m]))
 `,
 		},
+
+		{
+			name: "aligners, functions and aggregations",
+			query: `
+let
+  avail = kube_deployment_status_replicas_available{cluster!~"o11y-.+", namespace="monitoring"},
+  loop_time = looping_time{group_name="realtime", location="us-east1"} | rate 2m | sum by () | histogram_sum,
+  sleep_time = sleeping_time{group_name="realtime", location="us-east1"} | rate 2m | sum by () | histogram_sum
+in (avail > 1) * loop_time / (loop_time + sleep_time)
+`,
+			promql: `
+(
+	kube_deployment_status_replicas_available{cluster!~"o11y-.+",namespace="monitoring"} > 1) * 
+	histogram_sum(sum(rate(looping_time{group_name="realtime",location="us-east1"}[2m]))) 
+/ 
+(
+	histogram_sum(sum(rate(looping_time{group_name="realtime",location="us-east1"}[2m]))) 
+	+ 
+	histogram_sum(sum(rate(sleeping_time{group_name="realtime",location="us-east1"}[2m])))
+)`,
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

@@ -1,4 +1,4 @@
-// Code generated from grammar/Flow.g4 by ANTLR 4.13.2. DO NOT EDIT.
+// Code generated from Flow.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // Flow
 import "github.com/antlr4-go/antlr/v4"
@@ -91,3 +91,9 @@ func (s *BaseFlowListener) EnterAligner(ctx *AlignerContext) {}
 
 // ExitAligner is called when production aligner is exited.
 func (s *BaseFlowListener) ExitAligner(ctx *AlignerContext) {}
+
+// EnterFunction is called when production function is entered.
+func (s *BaseFlowListener) EnterFunction(ctx *FunctionContext) {}
+
+// ExitFunction is called when production function is exited.
+func (s *BaseFlowListener) ExitFunction(ctx *FunctionContext) {}

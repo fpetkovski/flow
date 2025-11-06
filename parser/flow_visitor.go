@@ -1,4 +1,4 @@
-// Code generated from grammar/Flow.g4 by ANTLR 4.13.2. DO NOT EDIT.
+// Code generated from Flow.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // Flow
 import "github.com/antlr4-go/antlr/v4"
@@ -42,4 +42,7 @@ type FlowVisitor interface {
 
 	// Visit a parse tree produced by FlowParser#aligner.
 	VisitAligner(ctx *AlignerContext) interface{}
+
+	// Visit a parse tree produced by FlowParser#function.
+	VisitFunction(ctx *FunctionContext) interface{}
 }

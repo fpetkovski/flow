@@ -30,8 +30,7 @@ $(ANTLR_JAR):
 gen: $(ANTLR_JAR)
 	@echo "Generating Go parser from grammar..."
 	@mkdir -p $(PARSER_DIR)
-	@java -jar $(ANTLR_JAR) -Dlanguage=Go -o $(PARSER_DIR) -package parser -visitor $(GRAMMAR)
-	@echo "Moving generated files to correct location..."
+	@cd $(GRAMMAR_DIR) && java -jar ../$(ANTLR_JAR) -Dlanguage=Go -o ../$(PARSER_DIR) -package parser -visitor Flow.g4
 	@echo "Parser generation complete!"
 
 # Generate JavaScript parser

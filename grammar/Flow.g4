@@ -23,6 +23,7 @@ binaryExpression
 
 binaryOperator
     : OP_ADD | OP_SUB | OP_MUL | OP_DIV
+    | OP_GT | OP_LT | OP_GTE | OP_LTE | OP_EQ | MATCH_NEQ
     ;
 
 primaryExpression
@@ -36,7 +37,9 @@ pipeline
     ;
 
 pipelineStep
-    : aggregation|aligner
+    : aggregation
+    | aligner
+    | function
     ;
 
 selector
@@ -57,6 +60,13 @@ OP_ADD : '+';
 OP_SUB : '-';
 OP_MUL : '*';
 OP_DIV : '/';
+
+// Comparison operators
+OP_GT  : '>';
+OP_LT  : '<';
+OP_GTE : '>=';
+OP_LTE : '<=';
+OP_EQ  : '==';
 
 aggregation
     : AGGREGATION_OP (BY|WITHOUT) ('(' (IDENTIFIER (',' IDENTIFIER)*)? ')')?
@@ -81,6 +91,10 @@ AGGREGATION_OP
 
 aligner
     : IDENTIFIER DURATION
+    ;
+
+function
+    : IDENTIFIER
     ;
 
 DURATION

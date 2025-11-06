@@ -87,6 +87,18 @@ func (v PromQLTranspiler) VisitBinaryOperator(ctx *parser.BinaryOperatorContext)
 		op = promqlparser.MUL
 	case ctx.OP_DIV() != nil:
 		op = promqlparser.DIV
+	case ctx.OP_GT() != nil:
+		op = promqlparser.GTR
+	case ctx.OP_LT() != nil:
+		op = promqlparser.LSS
+	case ctx.OP_GTE() != nil:
+		op = promqlparser.GTE
+	case ctx.OP_LTE() != nil:
+		op = promqlparser.LTE
+	case ctx.OP_EQ() != nil:
+		op = promqlparser.EQLC
+	case ctx.MATCH_NEQ() != nil:
+		op = promqlparser.NEQ
 	default:
 		panic("unknown binary operator")
 	}
@@ -150,9 +162,19 @@ func (v PromQLTranspiler) VisitPipeline(ctx *parser.PipelineContext) any {
 		case *promqlparser.AggregateExpr:
 			n.Expr = root
 		case *promqlparser.Call:
-			switch m := n.Args[0].(type) {
-			case *promqlparser.MatrixSelector:
-				m.VectorSelector = root
+			// Check if this is an aligner (has MatrixSelector) or a function
+			if len(n.Args) > 0 {
+				switch m := n.Args[0].(type) {
+				case *promqlparser.MatrixSelector:
+					// This is an aligner like rate, irate, etc.
+					m.VectorSelector = root
+				case nil:
+					// This is a function that needs the previous expression as its argument
+					n.Args[0] = root
+				}
+			} else {
+				// No args set yet, add the root as the first argument
+				n.Args = append(n.Args, root)
 			}
 		}
 		root = node.(promqlparser.Expr)
@@ -166,6 +188,8 @@ func (v PromQLTranspiler) VisitPipelineStep(ctx *parser.PipelineStepContext) any
 		return v.VisitAligner(ctx.Aligner().(*parser.AlignerContext))
 	case ctx.Aggregation() != nil:
 		return v.VisitAggregation(ctx.Aggregation().(*parser.AggregationContext))
+	case ctx.Function() != nil:
+		return v.VisitFunction(ctx.Function().(*parser.FunctionContext))
 	default:
 		panic("unknown pipeline step")
 	}
@@ -208,6 +232,17 @@ func (v PromQLTranspiler) VisitAggregation(ctx *parser.AggregationContext) any {
 		Grouping: lbls,
 		Without:  ctx.WITHOUT() != nil,
 	}
+}
+
+func (v PromQLTranspiler) VisitFunction(ctx *parser.FunctionContext) any {
+	// Functions like histogram_sum operate on the previous pipeline step
+	call := &promqlparser.Call{
+		Func: &promqlparser.Function{
+			Name: ctx.IDENTIFIER().GetText(),
+		},
+		Args: promqlparser.Expressions{}, // Empty args, will be filled by pipeline
+	}
+	return call
 }
 
 func (v PromQLTranspiler) VisitAligner(ctx *parser.AlignerContext) any {

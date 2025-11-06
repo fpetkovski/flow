@@ -1,4 +1,4 @@
-// Code generated from grammar/Flow.g4 by ANTLR 4.13.2. DO NOT EDIT.
+// Code generated from Flow.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // Flow
 import "github.com/antlr4-go/antlr/v4"
@@ -52,5 +52,9 @@ func (v *BaseFlowVisitor) VisitAggregation(ctx *AggregationContext) interface{} 
 }
 
 func (v *BaseFlowVisitor) VisitAligner(ctx *AlignerContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseFlowVisitor) VisitFunction(ctx *FunctionContext) interface{} {
 	return v.VisitChildren(ctx)
 }

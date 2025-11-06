@@ -1,4 +1,4 @@
-// Code generated from grammar/Flow.g4 by ANTLR 4.13.2. DO NOT EDIT.
+// Code generated from Flow.g4 by ANTLR 4.13.2. DO NOT EDIT.
 
 package parser // Flow
 import "github.com/antlr4-go/antlr/v4"
@@ -43,6 +43,9 @@ type FlowListener interface {
 	// EnterAligner is called when entering the aligner production.
 	EnterAligner(c *AlignerContext)
 
+	// EnterFunction is called when entering the function production.
+	EnterFunction(c *FunctionContext)
+
 	// ExitQuery is called when exiting the query production.
 	ExitQuery(c *QueryContext)
 
@@ -78,4 +81,7 @@ type FlowListener interface {
 
 	// ExitAligner is called when exiting the aligner production.
 	ExitAligner(c *AlignerContext)
+
+	// ExitFunction is called when exiting the function production.
+	ExitFunction(c *FunctionContext)
 }
