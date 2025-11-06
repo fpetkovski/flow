@@ -2,11 +2,17 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/fpetkovski/let-ql/parser"
+	promqlparser "github.com/prometheus/prometheus/promql/parser"
 	"github.com/stretchr/testify/require"
+)
+
+var (
+	reSpaces = regexp.MustCompile("\\s")
 )
 
 func TestParser(t *testing.T) {
@@ -64,9 +70,26 @@ let
 	req_get = http_requests_total{method="GET"} | rate 5m | sum by (endpoint),
 	req_total = http_requests_total | rate 5m | sum by (endpoint)
 in req_get / req_total`,
+			promql: `sum by (endpoint) (rate(http_requests_total{method="GET"}[5m])) / sum by (endpoint) (rate(http_requests_total[5m]))`,
+		},
+		{
+			name: "let expression with multiple binops",
+			query: `
+let
+	req_get = http_requests_total{method="GET"} | rate 5m | sum by (endpoint),
+	req_total = http_requests_total | rate 5m | sum by (endpoint)
+in (req_total - req_get) / req_total`,
+			promql: `
+(
+	sum by (endpoint) (rate(http_requests_total[5m]))
+	- 
+	sum by (endpoint) (rate(http_requests_total{method="GET"}[5m]))
+)
+/
+sum by (endpoint) (rate(http_requests_total[5m]))
+`,
 		},
 	}
-	//p := parser.NewPromQLPlusParser(nil)
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			ast, errs := parseQuery(tc.query)
@@ -75,9 +98,14 @@ in req_get / req_total`,
 				require.NotEmpty(t, errs)
 			} else {
 				require.Empty(t, errs)
-				v := PromQLTranspiler{}
-				pql := v.Visit(ast)
-				require.Equal(t, tc.promql, pql)
+				v := NewPromQLTranspiler()
+				gotPromQL, err := promqlparser.ParseExpr(v.Visit(ast).(string))
+				require.NoError(t, err)
+
+				wantPromQL, err := promqlparser.ParseExpr(tc.promql)
+				require.NoError(t, err)
+
+				require.Equal(t, gotPromQL.String(), wantPromQL.String())
 			}
 		})
 	}
@@ -95,9 +123,9 @@ func (c *customErrorListener) SyntaxError(recognizer antlr.Recognizer, offending
 }
 
 func parseQuery(query string) (parser.IQueryContext, []string) {
-	p := parser.NewPromQLPlusParser(
+	p := parser.NewFlowParser(
 		antlr.NewCommonTokenStream(
-			parser.NewPromQLPlusLexer(antlr.NewInputStream(query)),
+			parser.NewFlowLexer(antlr.NewInputStream(query)),
 			antlr.TokenDefaultChannel,
 		))
 

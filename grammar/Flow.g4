@@ -1,4 +1,4 @@
-grammar PromQLPlus;
+grammar Flow;
 
 // Parser rules
 
@@ -9,12 +9,7 @@ query
 
 // Let expression with bindings
 letExpression
-    : LET letBindings IN expression
-    ;
-
-// One or more let bindings
-letBindings
-    : letBinding (',' letBinding)*
+    : LET letBinding (',' letBinding)* IN binaryExpression
     ;
 
 // Single let binding
@@ -22,8 +17,17 @@ letBinding
     : IDENTIFIER MATCH_EQ pipeline
     ;
 
-expression
-    : IDENTIFIER ('/' | '+' | '-' | '*' | '%') IDENTIFIER
+binaryExpression
+    : primaryExpression (binaryOperator primaryExpression)*
+    ;
+
+binaryOperator
+    : OP_ADD | OP_SUB | OP_MUL | OP_DIV
+    ;
+
+primaryExpression
+    : IDENTIFIER
+    | '(' binaryExpression ')'
     ;
 
 pipeline
@@ -47,6 +51,11 @@ MATCH_EQ  : '=';
 MATCH_NEQ : '!=';
 MATCH_RE  : '=~';
 MATCH_NRE : '!~';
+
+OP_ADD : '+';
+OP_SUB : '-';
+OP_MUL : '*';
+OP_DIV : '/';
 
 aggregation
     : AGGREGATION_OP (BY|WITHOUT) ('(' (IDENTIFIER (',' IDENTIFIER)*)? ')')?

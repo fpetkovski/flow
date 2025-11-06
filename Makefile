@@ -12,7 +12,7 @@ PARSER_DIR := parser
 ANTLR_JAR := $(TOOLS_DIR)/$(ANTLR_JAR_NAME)
 
 # Grammar file
-GRAMMAR := $(GRAMMAR_DIR)/PromQLPlus.g4
+GRAMMAR := $(GRAMMAR_DIR)/Flow.g4
 
 # Default target
 .PHONY: all
