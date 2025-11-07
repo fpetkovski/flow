@@ -191,7 +191,7 @@
                     <h2>PromQL Flow Query</h2>
                     <div>
                         <button id="share-btn" class="btn">Share Link</button>
-                        <button id="format-btn" class="btn" disabled>Format & Transpile</button>
+                        <button id="format-btn" class="btn" disabled>Format</button>
                     </div>
                 </div>
                 <textarea id="flow-editor"></textarea>
@@ -402,10 +402,8 @@ in (errors / total) * 100`
                 document.getElementById('status').classList.add('ready');
                 document.getElementById('format-btn').disabled = false;
 
-                // Initial transpilation if there's content
-                if (editor && editor.getValue()) {
-                    transpile();
-                }
+                // Initial transpilation
+                transpile();
             } catch (error) {
                 console.error('Failed to load WASM:', error);
                 document.getElementById('status').textContent = 'Failed to load WebAssembly: ' + error.message;
@@ -441,9 +439,6 @@ in (errors / total) * 100`
             formatted = formatted.replace(/\s*\|\s*/g, ' | ');
 
             editor.setValue(formatted);
-
-            // Also transpile after formatting
-            transpile();
         }
 
         function copyOutput() {
@@ -585,9 +580,10 @@ in (errors / total) * 100`
                 });
             });
 
-            // Remove automatic updates - user will use buttons instead
+            let transpileTimeout;
             editor.on('change', function() {
-                // No automatic actions on change
+                clearTimeout(transpileTimeout);
+                transpileTimeout = setTimeout(transpile, 500);
             });
 
             // Load WASM
