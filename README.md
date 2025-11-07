@@ -2,7 +2,7 @@
 
 > **Note**: This is an experimental proof-of-concept project exploring alternative syntax for PromQL queries.
 >
-> **Try it out**: [Interactive Playground](https://github.com/fpetkovski/flow)
+> **Try it out**: [Interactive Playground](http://fpetkovski.github.io/flow)
 
 Flow is a query language that transpiles to PromQL (Prometheus Query Language). When writing PromQL queries, users typically start by exploring a metric and its labels, then add transformations like rate calculations and aggregations. However, PromQL's nested function syntax forces you to jump back and forth in the query—adding a new transformation means wrapping the entire expression in yet another function. Flow solves this by providing a left-to-right pipeline syntax using the `|` operator, allowing you to write queries in the same order you think about them: start with a metric, then apply transformations step by step.
 
