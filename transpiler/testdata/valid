@@ -1,0 +1,22 @@
+# Simple pipeline
+http_requests_total | rate 5m | sum by (endpoint)
+
+# Binary expression
+let
+  req_get = http_requests_total{method="GET"} | rate 5m | sum by (endpoint),
+  req_total = http_requests_total | rate 5m | sum by (endpoint)
+in req_get / req_total
+
+# Multiple binary expressions
+let
+  errors = http_requests_total{status=~"5.."} | rate 5m,
+  total = http_requests_total | rate 5m
+in (errors / total) * 100
+
+# Binary expression as selector
+let
+  errors = http_requests_total{status=~"5.."} | rate 5m,
+  total = http_requests_total | rate 5m,
+  ratio = errors / total
+in ratio * 100
+

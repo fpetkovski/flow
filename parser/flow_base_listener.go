@@ -38,24 +38,6 @@ func (s *BaseFlowListener) EnterLetBinding(ctx *LetBindingContext) {}
 // ExitLetBinding is called when production letBinding is exited.
 func (s *BaseFlowListener) ExitLetBinding(ctx *LetBindingContext) {}
 
-// EnterBinaryExpression is called when production binaryExpression is entered.
-func (s *BaseFlowListener) EnterBinaryExpression(ctx *BinaryExpressionContext) {}
-
-// ExitBinaryExpression is called when production binaryExpression is exited.
-func (s *BaseFlowListener) ExitBinaryExpression(ctx *BinaryExpressionContext) {}
-
-// EnterBinaryOperator is called when production binaryOperator is entered.
-func (s *BaseFlowListener) EnterBinaryOperator(ctx *BinaryOperatorContext) {}
-
-// ExitBinaryOperator is called when production binaryOperator is exited.
-func (s *BaseFlowListener) ExitBinaryOperator(ctx *BinaryOperatorContext) {}
-
-// EnterPrimaryExpression is called when production primaryExpression is entered.
-func (s *BaseFlowListener) EnterPrimaryExpression(ctx *PrimaryExpressionContext) {}
-
-// ExitPrimaryExpression is called when production primaryExpression is exited.
-func (s *BaseFlowListener) ExitPrimaryExpression(ctx *PrimaryExpressionContext) {}
-
 // EnterPipeline is called when production pipeline is entered.
 func (s *BaseFlowListener) EnterPipeline(ctx *PipelineContext) {}
 
@@ -80,6 +62,30 @@ func (s *BaseFlowListener) EnterLabelMatcher(ctx *LabelMatcherContext) {}
 // ExitLabelMatcher is called when production labelMatcher is exited.
 func (s *BaseFlowListener) ExitLabelMatcher(ctx *LabelMatcherContext) {}
 
+// EnterBinarySelector is called when production binarySelector is entered.
+func (s *BaseFlowListener) EnterBinarySelector(ctx *BinarySelectorContext) {}
+
+// ExitBinarySelector is called when production binarySelector is exited.
+func (s *BaseFlowListener) ExitBinarySelector(ctx *BinarySelectorContext) {}
+
+// EnterBinarySelectorLeg is called when production binarySelectorLeg is entered.
+func (s *BaseFlowListener) EnterBinarySelectorLeg(ctx *BinarySelectorLegContext) {}
+
+// ExitBinarySelectorLeg is called when production binarySelectorLeg is exited.
+func (s *BaseFlowListener) ExitBinarySelectorLeg(ctx *BinarySelectorLegContext) {}
+
+// EnterBinaryLegLeaf is called when production binaryLegLeaf is entered.
+func (s *BaseFlowListener) EnterBinaryLegLeaf(ctx *BinaryLegLeafContext) {}
+
+// ExitBinaryLegLeaf is called when production binaryLegLeaf is exited.
+func (s *BaseFlowListener) ExitBinaryLegLeaf(ctx *BinaryLegLeafContext) {}
+
+// EnterBinaryOperator is called when production binaryOperator is entered.
+func (s *BaseFlowListener) EnterBinaryOperator(ctx *BinaryOperatorContext) {}
+
+// ExitBinaryOperator is called when production binaryOperator is exited.
+func (s *BaseFlowListener) ExitBinaryOperator(ctx *BinaryOperatorContext) {}
+
 // EnterAggregation is called when production aggregation is entered.
 func (s *BaseFlowListener) EnterAggregation(ctx *AggregationContext) {}
 
@@ -97,3 +103,9 @@ func (s *BaseFlowListener) EnterFunction(ctx *FunctionContext) {}
 
 // ExitFunction is called when production function is exited.
 func (s *BaseFlowListener) ExitFunction(ctx *FunctionContext) {}
+
+// EnterBinary is called when production binary is entered.
+func (s *BaseFlowListener) EnterBinary(ctx *BinaryContext) {}
+
+// ExitBinary is called when production binary is exited.
+func (s *BaseFlowListener) ExitBinary(ctx *BinaryContext) {}

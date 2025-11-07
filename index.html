@@ -189,7 +189,10 @@
             <div class="editor-section">
                 <div class="section-header">
                     <h2>PromQL Flow Query</h2>
-                    <button id="format-btn" class="btn" disabled>Format</button>
+                    <div>
+                        <button id="share-btn" class="btn">Share Link</button>
+                        <button id="format-btn" class="btn" disabled>Format & Transpile</button>
+                    </div>
                 </div>
                 <textarea id="flow-editor"></textarea>
             </div>
@@ -399,8 +402,10 @@ in (errors / total) * 100`
                 document.getElementById('status').classList.add('ready');
                 document.getElementById('format-btn').disabled = false;
 
-                // Initial transpilation
-                transpile();
+                // Initial transpilation if there's content
+                if (editor && editor.getValue()) {
+                    transpile();
+                }
             } catch (error) {
                 console.error('Failed to load WASM:', error);
                 document.getElementById('status').textContent = 'Failed to load WebAssembly: ' + error.message;
@@ -436,6 +441,9 @@ in (errors / total) * 100`
             formatted = formatted.replace(/\s*\|\s*/g, ' | ');
 
             editor.setValue(formatted);
+
+            // Also transpile after formatting
+            transpile();
         }
 
         function copyOutput() {
@@ -460,6 +468,54 @@ in (errors / total) * 100`
             }, 2000);
         }
 
+        function shareQuery() {
+            // Ensure URL is up to date
+            updateURL(editor.getValue());
+
+            // Copy the current URL to clipboard
+            const url = window.location.href;
+
+            // Use the newer Clipboard API if available, fall back to execCommand
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => {
+                    updateShareButton('Link Copied!');
+                }).catch(() => {
+                    // Fall back to execCommand
+                    copyToClipboardFallback(url);
+                });
+            } else {
+                copyToClipboardFallback(url);
+            }
+        }
+
+        function copyToClipboardFallback(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                updateShareButton('Link Copied!');
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                updateShareButton('Copy Failed');
+            }
+
+            document.body.removeChild(textarea);
+        }
+
+        function updateShareButton(text) {
+            const shareBtn = document.getElementById('share-btn');
+            const originalText = shareBtn.textContent;
+            shareBtn.textContent = text;
+            setTimeout(() => {
+                shareBtn.textContent = originalText;
+            }, 2000);
+        }
+
         function escapeHtml(text) {
             const map = {
                 '&': '&amp;',
@@ -469,6 +525,29 @@ in (errors / total) * 100`
                 "'": '&#039;'
             };
             return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Function to update URL with query parameter
+        function updateURL(query) {
+            const params = new URLSearchParams(window.location.search);
+            if (query) {
+                params.set('q', query);
+            } else {
+                params.delete('q');
+            }
+
+            const newURL = window.location.pathname +
+                (params.toString() ? '?' + params.toString() : '') +
+                window.location.hash;
+
+            // Update URL without reloading the page
+            window.history.replaceState({}, '', newURL);
+        }
+
+        // Function to get query from URL
+        function getQueryFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('q');
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -482,11 +561,19 @@ in (errors / total) * 100`
                 indentWithTabs: false
             });
 
-            editor.setValue(examples.pipeline);
+            // Check if there's a query in the URL
+            const urlQuery = getQueryFromURL();
+            if (urlQuery) {
+                editor.setValue(urlQuery);
+            } else {
+                editor.setValue(examples.pipeline);
+            }
+
             outputDiv = document.getElementById('promql-output');
 
             document.getElementById('format-btn').addEventListener('click', formatQuery);
             document.getElementById('copy-btn').addEventListener('click', copyOutput);
+            document.getElementById('share-btn').addEventListener('click', shareQuery);
 
             document.querySelectorAll('.example-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -498,10 +585,9 @@ in (errors / total) * 100`
                 });
             });
 
-            let transpileTimeout;
+            // Remove automatic updates - user will use buttons instead
             editor.on('change', function() {
-                clearTimeout(transpileTimeout);
-                transpileTimeout = setTimeout(transpile, 500);
+                // No automatic actions on change
             });
 
             // Load WASM

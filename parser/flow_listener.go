@@ -16,15 +16,6 @@ type FlowListener interface {
 	// EnterLetBinding is called when entering the letBinding production.
 	EnterLetBinding(c *LetBindingContext)
 
-	// EnterBinaryExpression is called when entering the binaryExpression production.
-	EnterBinaryExpression(c *BinaryExpressionContext)
-
-	// EnterBinaryOperator is called when entering the binaryOperator production.
-	EnterBinaryOperator(c *BinaryOperatorContext)
-
-	// EnterPrimaryExpression is called when entering the primaryExpression production.
-	EnterPrimaryExpression(c *PrimaryExpressionContext)
-
 	// EnterPipeline is called when entering the pipeline production.
 	EnterPipeline(c *PipelineContext)
 
@@ -37,6 +28,18 @@ type FlowListener interface {
 	// EnterLabelMatcher is called when entering the labelMatcher production.
 	EnterLabelMatcher(c *LabelMatcherContext)
 
+	// EnterBinarySelector is called when entering the binarySelector production.
+	EnterBinarySelector(c *BinarySelectorContext)
+
+	// EnterBinarySelectorLeg is called when entering the binarySelectorLeg production.
+	EnterBinarySelectorLeg(c *BinarySelectorLegContext)
+
+	// EnterBinaryLegLeaf is called when entering the binaryLegLeaf production.
+	EnterBinaryLegLeaf(c *BinaryLegLeafContext)
+
+	// EnterBinaryOperator is called when entering the binaryOperator production.
+	EnterBinaryOperator(c *BinaryOperatorContext)
+
 	// EnterAggregation is called when entering the aggregation production.
 	EnterAggregation(c *AggregationContext)
 
@@ -46,6 +49,9 @@ type FlowListener interface {
 	// EnterFunction is called when entering the function production.
 	EnterFunction(c *FunctionContext)
 
+	// EnterBinary is called when entering the binary production.
+	EnterBinary(c *BinaryContext)
+
 	// ExitQuery is called when exiting the query production.
 	ExitQuery(c *QueryContext)
 
@@ -54,15 +60,6 @@ type FlowListener interface {
 
 	// ExitLetBinding is called when exiting the letBinding production.
 	ExitLetBinding(c *LetBindingContext)
-
-	// ExitBinaryExpression is called when exiting the binaryExpression production.
-	ExitBinaryExpression(c *BinaryExpressionContext)
-
-	// ExitBinaryOperator is called when exiting the binaryOperator production.
-	ExitBinaryOperator(c *BinaryOperatorContext)
-
-	// ExitPrimaryExpression is called when exiting the primaryExpression production.
-	ExitPrimaryExpression(c *PrimaryExpressionContext)
 
 	// ExitPipeline is called when exiting the pipeline production.
 	ExitPipeline(c *PipelineContext)
@@ -76,6 +73,18 @@ type FlowListener interface {
 	// ExitLabelMatcher is called when exiting the labelMatcher production.
 	ExitLabelMatcher(c *LabelMatcherContext)
 
+	// ExitBinarySelector is called when exiting the binarySelector production.
+	ExitBinarySelector(c *BinarySelectorContext)
+
+	// ExitBinarySelectorLeg is called when exiting the binarySelectorLeg production.
+	ExitBinarySelectorLeg(c *BinarySelectorLegContext)
+
+	// ExitBinaryLegLeaf is called when exiting the binaryLegLeaf production.
+	ExitBinaryLegLeaf(c *BinaryLegLeafContext)
+
+	// ExitBinaryOperator is called when exiting the binaryOperator production.
+	ExitBinaryOperator(c *BinaryOperatorContext)
+
 	// ExitAggregation is called when exiting the aggregation production.
 	ExitAggregation(c *AggregationContext)
 
@@ -84,4 +93,7 @@ type FlowListener interface {
 
 	// ExitFunction is called when exiting the function production.
 	ExitFunction(c *FunctionContext)
+
+	// ExitBinary is called when exiting the binary production.
+	ExitBinary(c *BinaryContext)
 }

@@ -19,18 +19,6 @@ func (v *BaseFlowVisitor) VisitLetBinding(ctx *LetBindingContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseFlowVisitor) VisitBinaryExpression(ctx *BinaryExpressionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseFlowVisitor) VisitBinaryOperator(ctx *BinaryOperatorContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseFlowVisitor) VisitPrimaryExpression(ctx *PrimaryExpressionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseFlowVisitor) VisitPipeline(ctx *PipelineContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -47,6 +35,22 @@ func (v *BaseFlowVisitor) VisitLabelMatcher(ctx *LabelMatcherContext) interface{
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseFlowVisitor) VisitBinarySelector(ctx *BinarySelectorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseFlowVisitor) VisitBinarySelectorLeg(ctx *BinarySelectorLegContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseFlowVisitor) VisitBinaryLegLeaf(ctx *BinaryLegLeafContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseFlowVisitor) VisitBinaryOperator(ctx *BinaryOperatorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseFlowVisitor) VisitAggregation(ctx *AggregationContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -56,5 +60,9 @@ func (v *BaseFlowVisitor) VisitAligner(ctx *AlignerContext) interface{} {
 }
 
 func (v *BaseFlowVisitor) VisitFunction(ctx *FunctionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseFlowVisitor) VisitBinary(ctx *BinaryContext) interface{} {
 	return v.VisitChildren(ctx)
 }

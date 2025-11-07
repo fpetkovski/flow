@@ -16,15 +16,6 @@ type FlowVisitor interface {
 	// Visit a parse tree produced by FlowParser#letBinding.
 	VisitLetBinding(ctx *LetBindingContext) interface{}
 
-	// Visit a parse tree produced by FlowParser#binaryExpression.
-	VisitBinaryExpression(ctx *BinaryExpressionContext) interface{}
-
-	// Visit a parse tree produced by FlowParser#binaryOperator.
-	VisitBinaryOperator(ctx *BinaryOperatorContext) interface{}
-
-	// Visit a parse tree produced by FlowParser#primaryExpression.
-	VisitPrimaryExpression(ctx *PrimaryExpressionContext) interface{}
-
 	// Visit a parse tree produced by FlowParser#pipeline.
 	VisitPipeline(ctx *PipelineContext) interface{}
 
@@ -37,6 +28,18 @@ type FlowVisitor interface {
 	// Visit a parse tree produced by FlowParser#labelMatcher.
 	VisitLabelMatcher(ctx *LabelMatcherContext) interface{}
 
+	// Visit a parse tree produced by FlowParser#binarySelector.
+	VisitBinarySelector(ctx *BinarySelectorContext) interface{}
+
+	// Visit a parse tree produced by FlowParser#binarySelectorLeg.
+	VisitBinarySelectorLeg(ctx *BinarySelectorLegContext) interface{}
+
+	// Visit a parse tree produced by FlowParser#binaryLegLeaf.
+	VisitBinaryLegLeaf(ctx *BinaryLegLeafContext) interface{}
+
+	// Visit a parse tree produced by FlowParser#binaryOperator.
+	VisitBinaryOperator(ctx *BinaryOperatorContext) interface{}
+
 	// Visit a parse tree produced by FlowParser#aggregation.
 	VisitAggregation(ctx *AggregationContext) interface{}
 
@@ -45,4 +48,7 @@ type FlowVisitor interface {
 
 	// Visit a parse tree produced by FlowParser#function.
 	VisitFunction(ctx *FunctionContext) interface{}
+
+	// Visit a parse tree produced by FlowParser#binary.
+	VisitBinary(ctx *BinaryContext) interface{}
 }

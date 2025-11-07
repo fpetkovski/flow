@@ -9,7 +9,7 @@ query
 
 // Let expression with bindings
 letExpression
-    : LET letBinding (',' letBinding)* IN binaryExpression
+    : LET letBinding (',' letBinding)* IN pipeline
     ;
 
 // Single let binding
@@ -17,29 +17,15 @@ letBinding
     : IDENTIFIER MATCH_EQ pipeline
     ;
 
-binaryExpression
-    : primaryExpression (binaryOperator primaryExpression)*
-    ;
-
-binaryOperator
-    : OP_ADD | OP_SUB | OP_MUL | OP_DIV
-    | OP_GT | OP_LT | OP_GTE | OP_LTE | OP_EQ | MATCH_NEQ
-    ;
-
-primaryExpression
-    : IDENTIFIER
-    | NUMBER
-    | '(' binaryExpression ')'
-    ;
-
 pipeline
-    : selector ('|' pipelineStep)*
+    : (selector|binarySelector) ('|' pipelineStep)*
     ;
 
 pipelineStep
     : aggregation
     | aligner
     | function
+    | binary
     ;
 
 selector
@@ -48,6 +34,22 @@ selector
 
 labelMatcher
     : IDENTIFIER (MATCH_EQ | MATCH_NEQ | MATCH_RE | MATCH_NRE) STRING
+    ;
+
+binarySelector
+    : binarySelectorLeg (binaryOperator binarySelectorLeg)*
+    ;
+
+binarySelectorLeg
+    : binaryLegLeaf
+    | '(' binarySelector ')'
+    ;
+
+binaryLegLeaf: IDENTIFIER | NUMBER ;
+
+binaryOperator
+    : OP_ADD | OP_SUB | OP_MUL | OP_DIV
+    | OP_GT | OP_LT | OP_GTE | OP_LTE | OP_EQ | MATCH_NEQ
     ;
 
 // Match operators
@@ -69,7 +71,7 @@ OP_LTE : '<=';
 OP_EQ  : '==';
 
 aggregation
-    : AGGREGATION_OP (BY|WITHOUT) ('(' (IDENTIFIER (',' IDENTIFIER)*)? ')')?
+    : AGGREGATION_OP ((BY|WITHOUT) ('(' (IDENTIFIER (',' IDENTIFIER)*)? ')'))?
     ;
 
 BY         : 'by';
@@ -95,6 +97,10 @@ aligner
 
 function
     : IDENTIFIER
+    ;
+
+binary
+    : binaryOperator binaryLegLeaf
     ;
 
 DURATION

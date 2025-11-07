@@ -49,6 +49,11 @@ func TestParser(t *testing.T) {
 			promql: `http_requests_total{method="POST"}`,
 		},
 		{
+			name:   "aggregation",
+			query:  `http_requests_total{method="POST"} | sum`,
+			promql: `sum(http_requests_total{method="POST"})`,
+		},
+		{
 			name:   "single-label aggregation",
 			query:  `http_requests_total{method="POST"} | sum by (method)`,
 			promql: `sum by (method) (http_requests_total{method="POST"})`,
@@ -129,11 +134,37 @@ in (avail > 1) * loop_time / (loop_time + sleep_time)
 )`,
 		},
 		{
-			name:   "binary expression",
-			query:  `let y = http{} | sum by () in y`,
-			promql: `sum(http)`,
+			name: "binary expression as selector",
+			query: `
+let
+  errors = http_requests_total{status=~"5.."} | rate 5m,
+  total = http_requests_total | rate 5m,
+  ratio = errors / total
+in ratio * 100`,
+			promql: `rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100`,
+		},
+		{
+			name: "pipeline in let expression",
+			query: `
+let
+  errors = http_requests_total{status=~"5.."} | rate 5m,
+  total = http_requests_total | rate 5m,
+  ratio = errors / total
+in ratio * 100 | sum`,
+			promql: `sum(rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100)`,
+		},
+		{
+			name: "binary operation in pipeline",
+			query: `
+let
+  errors = http_requests_total{status=~"5.."} | rate 5m | > 4,
+  total = http_requests_total | rate 5m,
+  ratio = errors / total
+in ratio * 100 | sum | > 3`,
+			promql: `sum(rate(http_requests_total{status=~"5.."}[5m]) > 4 / rate(http_requests_total[5m]) * 100) > 3`,
 		},
 	}
+
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			ast, errs := parseQuery(tc.query)

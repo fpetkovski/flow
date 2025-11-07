@@ -39,31 +39,25 @@ func (v PromQLTranspiler) VisitQuery(ctx *parser.QueryContext) any {
 }
 
 func (v PromQLTranspiler) VisitLetExpression(ctx *parser.LetExpressionContext) any {
-	// First, collect all bindings
 	for _, b := range ctx.AllLetBinding() {
 		name := b.(*parser.LetBindingContext).IDENTIFIER().GetText()
 		expr := v.VisitPipeline(b.(*parser.LetBindingContext).Pipeline().(*parser.PipelineContext)).(promqlparser.Expr)
 		v.bindings[name] = expr
 	}
 
-	return v.VisitBinaryExpression(ctx.BinaryExpression().(*parser.BinaryExpressionContext)).(promqlparser.Expr)
+	return v.VisitPipeline(ctx.Pipeline().(*parser.PipelineContext)).(promqlparser.Expr)
 }
 
-func (v PromQLTranspiler) VisitBinaryExpression(ctx *parser.BinaryExpressionContext) any {
-	// Get the first primary expression
-	exprs := ctx.AllPrimaryExpression()
-	if len(exprs) == 1 {
-		// Simple case - just one expression
-		return v.VisitPrimaryExpression(exprs[0].(*parser.PrimaryExpressionContext))
-	}
+func (v PromQLTranspiler) VisitBinarySelector(ctx *parser.BinarySelectorContext) any {
+	exprs := ctx.AllBinarySelectorLeg()
 
 	// Build the expression from left to right
 	// Since PromQL will handle precedence, we can just build it linearly
-	left := v.VisitPrimaryExpression(exprs[0].(*parser.PrimaryExpressionContext)).(promqlparser.Expr)
+	left := v.VisitBinarySelectorLeg(exprs[0].(*parser.BinarySelectorLegContext)).(promqlparser.Expr)
 
 	operators := ctx.AllBinaryOperator()
 	for i := 0; i < len(operators); i++ {
-		right := v.VisitPrimaryExpression(exprs[i+1].(*parser.PrimaryExpressionContext)).(promqlparser.Expr)
+		right := v.VisitBinarySelectorLeg(exprs[i+1].(*parser.BinarySelectorLegContext)).(promqlparser.Expr)
 		op := v.VisitBinaryOperator(operators[i].(*parser.BinaryOperatorContext)).(promqlparser.ItemType)
 
 		left = &promqlparser.BinaryExpr{
@@ -74,6 +68,28 @@ func (v PromQLTranspiler) VisitBinaryExpression(ctx *parser.BinaryExpressionCont
 	}
 
 	return left
+}
+
+func (v PromQLTranspiler) VisitBinaryLegLeaf(ctx *parser.BinaryLegLeafContext) interface{} {
+	if id := ctx.IDENTIFIER(); id != nil {
+		if bound, ok := v.bindings[id.GetText()]; ok {
+			return bound
+		}
+		// If not found in bindings, treat as a metric name
+		return &promqlparser.VectorSelector{
+			Name: id.GetText(),
+		}
+	}
+	if n := ctx.NUMBER(); n != nil {
+		val, err := strconv.ParseFloat(n.GetText(), 64)
+		if err != nil {
+			panic(err)
+		}
+		return &promqlparser.NumberLiteral{
+			Val: val,
+		}
+	}
+	panic("unknown leaf")
 }
 
 func (v PromQLTranspiler) VisitBinaryOperator(ctx *parser.BinaryOperatorContext) any {
@@ -105,28 +121,13 @@ func (v PromQLTranspiler) VisitBinaryOperator(ctx *parser.BinaryOperatorContext)
 	return op
 }
 
-func (v PromQLTranspiler) VisitPrimaryExpression(ctx *parser.PrimaryExpressionContext) any {
-	if id := ctx.IDENTIFIER(); id != nil {
-		if bound, ok := v.bindings[id.GetText()]; ok {
-			return bound
-		}
-		// If not found in bindings, treat as a metric name
-		return &promqlparser.VectorSelector{
-			Name: id.GetText(),
-		}
-	}
-	if n := ctx.NUMBER(); n != nil {
-		val, err := strconv.ParseFloat(n.GetText(), 64)
-		if err != nil {
-			panic(err)
-		}
-		return &promqlparser.NumberLiteral{
-			Val: val,
-		}
+func (v PromQLTranspiler) VisitBinarySelectorLeg(ctx *parser.BinarySelectorLegContext) any {
+	if ctx.BinaryLegLeaf() != nil {
+		return v.VisitBinaryLegLeaf(ctx.BinaryLegLeaf().(*parser.BinaryLegLeafContext))
 	}
 
 	// Must be a parenthesized expression - preserve the parentheses
-	expr := v.VisitBinaryExpression(ctx.BinaryExpression().(*parser.BinaryExpressionContext)).(promqlparser.Expr)
+	expr := v.VisitBinarySelector(ctx.BinarySelector().(*parser.BinarySelectorContext)).(promqlparser.Expr)
 	return &promqlparser.ParenExpr{
 		Expr: expr,
 	}
@@ -140,16 +141,15 @@ func (v PromQLTranspiler) VisitLetBinding(ctx *parser.LetBindingContext) any {
 	return ""
 }
 
-func (v PromQLTranspiler) VisitExpression(ctx *parser.BinaryExpressionContext) any {
-	p, err := promqlparser.ParseExpr(ctx.GetText())
-	if err != nil {
-		panic(err)
-	}
-	return p
-}
-
 func (v PromQLTranspiler) VisitPipeline(ctx *parser.PipelineContext) any {
-	selector := v.VisitSelector(ctx.Selector().(*parser.SelectorContext))
+	var selector promqlparser.Expr
+	switch {
+	case ctx.Selector() != nil:
+		selector = v.VisitSelector(ctx.Selector().(*parser.SelectorContext)).(promqlparser.Expr)
+	case ctx.BinarySelector() != nil:
+		selector = v.VisitBinarySelector(ctx.BinarySelector().(*parser.BinarySelectorContext)).(promqlparser.Expr)
+	}
+
 	steps := ctx.AllPipelineStep()
 	if len(steps) == 0 {
 		return selector
@@ -176,6 +176,8 @@ func (v PromQLTranspiler) VisitPipeline(ctx *parser.PipelineContext) any {
 				// No args set yet, add the root as the first argument
 				n.Args = append(n.Args, root)
 			}
+		case *promqlparser.BinaryExpr:
+			n.LHS = root
 		}
 		root = node.(promqlparser.Expr)
 	}
@@ -190,6 +192,8 @@ func (v PromQLTranspiler) VisitPipelineStep(ctx *parser.PipelineStepContext) any
 		return v.VisitAggregation(ctx.Aggregation().(*parser.AggregationContext))
 	case ctx.Function() != nil:
 		return v.VisitFunction(ctx.Function().(*parser.FunctionContext))
+	case ctx.Binary() != nil:
+		return v.VisitBinary(ctx.Binary().(*parser.BinaryContext))
 	default:
 		panic("unknown pipeline step")
 	}
@@ -266,6 +270,13 @@ func (v PromQLTranspiler) VisitAligner(ctx *parser.AlignerContext) any {
 	}
 
 	return call
+}
+
+func (v PromQLTranspiler) VisitBinary(ctx *parser.BinaryContext) interface{} {
+	return &promqlparser.BinaryExpr{
+		Op:  v.VisitBinaryOperator(ctx.BinaryOperator().(*parser.BinaryOperatorContext)).(promqlparser.ItemType),
+		RHS: v.VisitBinaryLegLeaf(ctx.BinaryLegLeaf().(*parser.BinaryLegLeafContext)).(promqlparser.Expr),
+	}
 }
 
 func (v PromQLTranspiler) VisitSelector(ctx *parser.SelectorContext) any {
