@@ -163,6 +163,17 @@ let
 in ratio * 100 | sum | > 3`,
 			promql: `sum(rate(http_requests_total{status=~"5.."}[5m]) > 4 / rate(http_requests_total[5m]) * 100) > 3`,
 		},
+		{
+			name: "iterative bindings",
+			query: `
+let
+  z = y + x,
+  x = 10,
+  y = x * 30
+in y + 20 / z
+`,
+			promql: `10 * 30 + 20 / 10 * 30 + 10`,
+		},
 	}
 
 	for _, tc := range cases {
