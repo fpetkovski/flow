@@ -115,8 +115,8 @@ UNLESS     : 'unless';
 // Numbers
 NUMBER     : [0-9]+ ('.' [0-9]+)? ([eE] [+-]? [0-9]+)?;
 
-// Duration units - must come before IDENTIFIER to get priority
-DURATION_UNIT : 'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'y';
+// Duration units - fragment so they only match as part of DURATION token
+fragment DURATION_UNIT : 'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'y';
 
 // Identifiers - allows colons for metric names like "http_requests:rate5m"
 IDENTIFIER : [a-zA-Z_:][a-zA-Z0-9_:]*;

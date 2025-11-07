@@ -128,6 +128,11 @@ in (avail > 1) * loop_time / (loop_time + sleep_time)
 	histogram_sum(sum(rate(sleeping_time{group_name="realtime",location="us-east1"}[2m])))
 )`,
 		},
+		{
+			name:   "binary expression",
+			query:  `let y = http{} | sum by () in y`,
+			promql: `sum(http)`,
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

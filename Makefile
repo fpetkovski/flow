@@ -5,7 +5,7 @@ ANTLR_URL := https://www.antlr.org/download/$(ANTLR_JAR_NAME)
 
 # Directories
 TOOLS_DIR := tools
-GRAMMAR_DIR := grammar
+GRAMMAR_DIR := parser/grammar
 PARSER_DIR := parser
 
 # Full path to ANTLR jar
@@ -16,7 +16,7 @@ GRAMMAR := $(GRAMMAR_DIR)/Flow.g4
 
 # Default target
 .PHONY: all
-all: gen
+all: parser
 
 # Download ANTLR if not present
 $(ANTLR_JAR):
@@ -26,16 +26,16 @@ $(ANTLR_JAR):
 	@cd $(TOOLS_DIR) && curl -O $(ANTLR_URL)
 
 # Generate parser from grammar
-.PHONY: gen
-gen: $(ANTLR_JAR)
+.PHONY: parser
+parser: $(ANTLR_JAR)
 	@echo "Generating Go parser from grammar..."
 	@mkdir -p $(PARSER_DIR)
-	@cd $(GRAMMAR_DIR) && java -jar ../$(ANTLR_JAR) -Dlanguage=Go -o ../$(PARSER_DIR) -package parser -visitor Flow.g4
+	@cd $(GRAMMAR_DIR) && java -jar ../../$(ANTLR_JAR) -Dlanguage=Go -o ../ -package parser -visitor Flow.g4
 	@echo "Parser generation complete!"
 
 # Generate JavaScript parser
-.PHONY: gen-js
-gen-js: $(ANTLR_JAR)
+.PHONY: parser-js
+parser-js: $(ANTLR_JAR)
 	@echo "Generating JavaScript parser from grammar..."
 	@mkdir -p web/parser
 	@java -jar $(ANTLR_JAR) -Dlanguage=JavaScript -o web/parser -visitor $(GRAMMAR)
@@ -62,14 +62,14 @@ clean-all: clean
 
 # Run tests
 .PHONY: test
-test: gen
+test: parser
 	@echo "Running tests..."
 	@go test ./...
 	@echo "Tests complete!"
 
 # Build WASM
 .PHONY: wasm
-wasm: gen
+wasm: parser
 	@echo "Building WebAssembly module..."
 	@mkdir -p web
 	@GOOS=js GOARCH=wasm go build -o web/flow-transpiler.wasm wasm.go
@@ -84,7 +84,7 @@ wasm-js: wasm
 	@chmod +x scripts/generate-wasm-js.sh
 	@./scripts/generate-wasm-js.sh
 	@rm -f web/flow-transpiler.wasm web/wasm_exec.js
-	@echo "Web files ready! Open web/flow-playground.html in your browser"
+	@echo "Web files ready! Open index.html in your browser"
 
 # Alias for wasm-js (main web target)
 .PHONY: web
