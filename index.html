@@ -214,6 +214,8 @@
                 <button class="example-btn" data-example="aggregation">Aggregation</button>
                 <button class="example-btn" data-example="let">Let Expression</button>
                 <button class="example-btn" data-example="complex">Complex Query</button>
+                <button class="example-btn" data-example="binop_filter">Binary filter</button>
+                <button class="example-btn" data-example="binop">Binary operation</button>
             </div>
         </div>
     </div>
@@ -375,7 +377,9 @@ in req_get / req_total`,
             complex: `let
   errors = http_requests_total{status=~"5.."} | rate 5m,
   total = http_requests_total | rate 5m
-in (errors / total) * 100`
+in (errors / total) * 100`,
+            binop_filter: `http_requests_total{status=~"5.."} | rate 5m | > 10`,
+            binop: `http_requests_total{status=~"5.."} | rate 5m | * 10`
         };
 
         // Load WASM from the global variable set by flow-wasm.js
